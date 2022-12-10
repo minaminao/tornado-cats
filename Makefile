@@ -1,8 +1,14 @@
 all: phase1 phase2 test
 
-init:
+init: clean
 	npm install
 	pip install -r requirements.txt
+
+blank:
+	git checkout -b blank
+	rm contracts/src/TornadoCats.sol
+	rm -rf circuits/multiplier*
+	rm circuits/tornado-cats/withdraw.circom
 
 phase1:
 	mkdir -p build
