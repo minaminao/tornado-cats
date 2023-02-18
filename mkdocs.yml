@@ -1,0 +1,100 @@
+site_name: Tornado Cats
+site_description: A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash
+docs_dir: book-src
+site_dir: book-build
+site_url: https://minaminao.github.io/tornado-cats/
+
+theme:
+  name: material
+  # language: ja
+  palette:
+    scheme: slate
+  icon:
+    logo: fontawesome/solid/shield-cat
+    repo: fontawesome/brands/github-alt
+  favicon: images/favicon.png
+  features:
+    # - navigation.sections
+    - navigation.expand
+    - navigation.indexes 
+    - navigation.footer
+    - toc.integrate
+
+repo_name: minaminao/tornado-cats
+repo_url: https://github.com/minaminao/tornado-cats
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+
+plugins:
+  - search:
+      lang: 
+      - en
+      - ja
+  - social:
+      cards_font: Noto Sans JP
+      cards_color:
+        text: "#7dffbd"
+        fill: "#141414"
+
+nav:
+- index.md
+- "1. イントロダクション": 
+  - "1.1. はじめに": intro/introduction.md
+  - "1.2. Tornado Cashの概要": intro/tornado-cash-overview.md
+  - "1.3. ゼロ知識証明の概要": intro/zkp-overview.md
+- "2. ゼロ知識証明の理論":
+  - "2. ゼロ知識証明の理論": zkp-theory/index.md
+  - "2.1. 前提知識と準備": zkp-theory/prerequisite.md
+  - "2.2. 証明システム": zkp-theory/proof-system.md
+  - "2.3. 対話型証明システム": zkp-theory/interactive-proof-system.md
+  - "2.4. 対話型ゼロ知識証明": zkp-theory/interactive-zkp.md
+  - "2.5. NPに対するゼロ知識証明": zkp-theory/zkp-for-np.md
+  - "2.6. 知識の証明": zkp-theory/proof-of-knowledge.md
+  - "2.7. アーギュメント": zkp-theory/argument.md
+  - "2.8. 非対話型ゼロ知識証明": zkp-theory/nizk.md
+  - "2.9. 知識の非対話型ゼロ知識アーギュメント": zkp-theory/zk-nark.md
+  - "2.10. 簡潔な非対話型アーギュメント": zkp-theory/snarg.md
+  - "2.11. Quadratic Arithmetic Program": zkp-theory/qap.md
+  - "2.12. Groth16: QAPに対するzk-SNARK": zkp-theory/groth16.md
+- "3. ゼロ知識証明回路の基礎":
+  - "3. ゼロ知識証明回路の基礎": circuit/index.md
+  - "3.1. Circomとは": circuit/circom.md
+  - "3.2. 回路の例: 因数分解": circuit/factorization.md
+  - "3.3. 回路のコンパイル": circuit/compile.md
+  - "3.4. Rank 1 Constraint System": circuit/r1cs.md
+  - "3.5. ウィットネスの計算": circuit/witness-computation.md
+  - "3.6. ゼロ知識証明のセットアップ": circuit/setup-zkp.md
+  - "3.7. ゼロ知識証明の生成と検証": circuit/generation-and-verification.md
+  - "3.8. 演習": circuit/exercise.md
+- "4. ミキサープロトコルの開発": 
+  - "4. ミキサープロトコルの開発": mixer/index.md
+  - "4.1. ミキサープロトコルの設計": mixer/design.md
+  - "4.2. ミキサープロトコルの全体構成と準備": mixer/preparation.md
+  - "4.3. ミキサーコントラクトの実装": mixer/mixer-contract.md
+  - "4.4. 出金回路の実装": mixer/withdrawal-circuit.md
+- "5. 付録":
+  - "5. 付録": appendix/index.md
+  - "5.1. Tornado Cashの非中央集権性": appendix/tornado-cash-decentralization.md
+  - "5.2. Tornado Cashの稼働状況": appendix/tornado-cash-status.md
+  - "5.3. Tornado Cash Classicのコントラクト": appendix/tornado-cash-classic-contracts.md
+  - "5.4. Tornado Cash Classicのゼロ知識証明回路": appendix/tornado-cash-classic-circuits.md
+  - "5.5. Tornado Cash ClassicのTrusted Setup Ceremony": appendix/tornado-cash-classic-ceremony.md
+  - "5.6. CircomLib": appendix/circomlib.md
+  - "5.7. zk-SNARK用のプリコンパイル済みコントラクト": appendix/precompiled-contracts-for-zk.md
+- "6. 参考文献": reference.md

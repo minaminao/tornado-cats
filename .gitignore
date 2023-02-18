@@ -1,0 +1,32 @@
+# Compiler files
+cache/
+out/
+
+# Ignores development broadcast logs
+!/broadcast
+/broadcast/*
+/broadcast/*/31337/
+
+logo
+
+.DS_Store
+
+.obsidian/
+circuits/*/*
+!*.circom
+
+package-lock.json
+node_modules/
+
+build/
+Verifier.sol
+tmp/
+.vscode
+
+# MkDocs
+book-build
+.cache
+venv-mkdocs
+
+# Draft
+_*.md

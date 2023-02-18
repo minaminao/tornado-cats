@@ -1,0 +1,10 @@
+[profile.default]
+src = 'contracts/src'
+out = 'contracts/out'
+test = 'contracts/test'
+script = 'contracts/script'
+libs = ['contracts/lib']
+ffi = true
+fs_permissions = [{ access = "read-write", path = "./tmp"}]
+
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config
