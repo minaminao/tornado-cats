@@ -92,11 +92,11 @@ contract TornadoCatsTest is Test {
             depositJson = string(vm.ffi(cmds));
         }
 
-        uint256 nullifier = depositJson.readUint("nullifier");
-        uint256 nullifierHash = depositJson.readUint("nullifierHash");
-        uint256 secret = depositJson.readUint("secret");
-        bytes memory preimage = depositJson.readBytes("preimage");
-        bytes32 commitment = depositJson.readBytes32("commitment");
+        uint256 nullifier = depositJson.readUint(".nullifier");
+        uint256 nullifierHash = depositJson.readUint(".nullifierHash");
+        uint256 secret = depositJson.readUint(".secret");
+        bytes memory preimage = depositJson.readBytes(".preimage");
+        bytes32 commitment = depositJson.readBytes32(".commitment");
 
         emit log_named_uint("  nullifier", nullifier);
         emit log_named_uint("  nullifierHash", nullifierHash);
@@ -139,7 +139,7 @@ contract TornadoCatsTest is Test {
         }
         vm.writeFile("tmp/input.json", inputJson);
 
-        uint256 root = stringToUint(inputJson.readString("root"));
+        uint256 root = stringToUint(inputJson.readString(".root"));
         assertTrue(tornadoCats.isKnownRoot(bytes32(root)), "Unknown root");
         assertFalse(tornadoCats.isSpent(bytes32(nullifierHash)));
 
@@ -170,7 +170,7 @@ contract TornadoCatsTest is Test {
             vm.ffi(cmds);
         }
         string memory proofJson = vm.readFile("tmp/proof_calldata.json");
-        bytes memory proof = proofJson.readBytes("proof");
+        bytes memory proof = proofJson.readBytes(".proof");
         assertEq(recipient.balance, 0);
         tornadoCats.withdraw(proof, bytes32(root), bytes32(nullifierHash), payable(recipient), payable(address(0)), 0);
         assertEq(recipient.balance, DENOMINATION);
