@@ -4,7 +4,7 @@
 
 ## Tornado Cashとは
 
-Tornado Cashは、ブロックチェーン上で暗号資産の送金を匿名化するプロトコルです。具体的には、送信者視点で「誰に送ったか」と受信者視点で「誰から受け取ったか」を秘匿化するプロトコルです。受け取った額は秘匿化されません。Tornado Cashは非中央集権的に運用されており、既にデプロイされたコントラクトの挙動は変更できなくなっています。（詳しくは「[Tornado Cashの非中央集権性](../appendix/tornado-cash-decentralization.md)」を参照してください。）
+Tornado Cashは、ブロックチェーン上で暗号資産の送金を匿名化するプロトコルです。具体的には、「送信者が誰に送ったか」と「受信者が誰から受け取ったか」を秘匿化するプロトコルです。受け取った額は秘匿化されません。Tornado Cashは非中央集権的に運用されており、既にデプロイされたコントラクトの挙動は変更できなくなっています。（詳しくは「[Tornado Cashの非中央集権性](../appendix/tornado-cash-decentralization.md)」を参照してください。）
 
 現在はEthereumを初め様々なブロックチェーンにデプロイされており、Ether以外にも様々なERC-20トークンに対応しています。（詳しくは「[Tornado Cashの稼働状況](../appendix/tornado-cash-status.md)」を参照してください。）
 
@@ -51,6 +51,7 @@ Tornado Cashにおいて、プールにある自分のトークンは完全に�
 Tornado Cashには大きく2つのバージョンがあります。Tornado Cash ClassicとTornado Cash Novaです。Tornado Cash Novaは2021年12月にリリースされた新しいバージョンで、それと対比して従来のTornado CashをTornado Cash Classicと呼びます。この資料ではTornado Cash Classicをベースにミキサープロトコルを自作しますが、Tornado Cash Novaの機能である「任意の金額の送金」と「Shielded Transfer」について紹介します。
 
 まず、任意の金額の送金についてです。Tornado Cash Classicでは固定額の入出金しかできません。例えば、Etherであれば0.1 ETH, 1 ETH, 10 ETH, 100 ETHの4種類のプールを選択して利用する必要があります。2.4 ETHを送金したいなら、
+
 - 1 ETHのプールに2回入金
 - 0.1 ETHのプールに4回入金
 
