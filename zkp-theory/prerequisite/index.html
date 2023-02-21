@@ -1,0 +1,1503 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash">
+      
+      
+      
+        <link rel="canonical" href="https://minaminao.github.io/tornado-cats/zkp-theory/prerequisite/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../proof-system/">
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>2.1. 前提知識と準備 - Tornado Cats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.03fa9ba6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="2.1. 前提知識と準備 - Tornado Cats" >
+      
+        <meta  property="og:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  property="og:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/zkp-theory/prerequisite.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://minaminao.github.io/tornado-cats/zkp-theory/prerequisite/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="2.1. 前提知識と準備 - Tornado Cats" >
+      
+        <meta  name="twitter:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  name="twitter:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/zkp-theory/prerequisite.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tornado Cats" class="md-header__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tornado Cats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2.1. 前提知識と準備
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tornado Cats" class="md-nav__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    Tornado Cats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          1. イントロダクション
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1. イントロダクション
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/introduction/" class="md-nav__link">
+        1.1. はじめに
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/tornado-cash-overview/" class="md-nav__link">
+        1.2. Tornado Cashの概要
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/zkp-overview/" class="md-nav__link">
+        1.3. ゼロ知識証明の概要
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">2. ゼロ知識証明の理論</a>
+          
+            <label for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2. ゼロ知識証明の理論
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          2.1. 前提知識と準備
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        2.1. 前提知識と準備
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    アルファベット、文字、文字列、言語
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    確率的多項式時間アルゴリズム
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negligibleoverwhelming" class="md-nav__link">
+    関数のnegligibleとoverwhelming
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    確率変数、アンサンブル
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    識別不可能性
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    一方向性関数、一方向性置換、ハードコア述語
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turing" class="md-nav__link">
+    確率的多項式時間Turingマシン
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    2者間プロトコルの安全性とシミュレーションパラダイム
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    計算複雑性クラス
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#np" class="md-nav__link">
+    関係、二項関係、NP関係
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    算術回路
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    双線形群
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proof-system/" class="md-nav__link">
+        2.2. 証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interactive-proof-system/" class="md-nav__link">
+        2.3. 対話型証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interactive-zkp/" class="md-nav__link">
+        2.4. 対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zkp-for-np/" class="md-nav__link">
+        2.5. NPに対するゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proof-of-knowledge/" class="md-nav__link">
+        2.6. 知識の証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../argument/" class="md-nav__link">
+        2.7. アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nizk/" class="md-nav__link">
+        2.8. 非対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zk-nark/" class="md-nav__link">
+        2.9. 知識の非対話型ゼロ知識アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snarg/" class="md-nav__link">
+        2.10. 簡潔な非対話型アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qap/" class="md-nav__link">
+        2.11. Quadratic Arithmetic Program
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groth16/" class="md-nav__link">
+        2.12. Groth16: QAPに対するzk-SNARK
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../circuit/">3. ゼロ知識証明回路の基礎</a>
+          
+            <label for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          3. ゼロ知識証明回路の基礎
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/circom/" class="md-nav__link">
+        3.1. Circomとは
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/factorization/" class="md-nav__link">
+        3.2. 回路の例: 因数分解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/compile/" class="md-nav__link">
+        3.3. 回路のコンパイル
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/r1cs/" class="md-nav__link">
+        3.4. Rank 1 Constraint System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/witness-computation/" class="md-nav__link">
+        3.5. ウィットネスの計算
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/setup-zkp/" class="md-nav__link">
+        3.6. ゼロ知識証明のセットアップ
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/generation-and-verification/" class="md-nav__link">
+        3.7. ゼロ知識証明の生成と検証
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/exercise/" class="md-nav__link">
+        3.8. 演習
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../mixer/">4. ミキサープロトコルの開発</a>
+          
+            <label for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          4. ミキサープロトコルの開発
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/design/" class="md-nav__link">
+        4.1. ミキサープロトコルの設計
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/preparation/" class="md-nav__link">
+        4.2. ミキサープロトコルの全体構成と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/mixer-contract/" class="md-nav__link">
+        4.3. ミキサーコントラクトの実装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/withdrawal-circuit/" class="md-nav__link">
+        4.4. 出金回路の実装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../appendix/">5. 付録</a>
+          
+            <label for="__nav_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          5. 付録
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-decentralization/" class="md-nav__link">
+        5.1. Tornado Cashの非中央集権性
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-status/" class="md-nav__link">
+        5.2. Tornado Cashの稼働状況
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-contracts/" class="md-nav__link">
+        5.3. Tornado Cash Classicのコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-circuits/" class="md-nav__link">
+        5.4. Tornado Cash Classicのゼロ知識証明回路
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-ceremony/" class="md-nav__link">
+        5.5. Tornado Cash ClassicのTrusted Setup Ceremony
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/circomlib/" class="md-nav__link">
+        5.6. CircomLib
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/precompiled-contracts-for-zk/" class="md-nav__link">
+        5.7. zk-SNARK用のプリコンパイル済みコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        6. 参考文献
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="_1">前提知識と準備</h1>
+<p>Groth16を理解するために必要な前提知識と、数学的な表記法について説明します。計算機科学を専攻している方なら当たり前である内容も多いと思います。専攻していなくても、このページは軽く流し読みして後でその概念に関してしっかり理解したくなったタイミングで読めば大丈夫です。また、全く読まなくても、意味がわからない用語が出てきたときにこのサイトの上部にある検索バーで検索すれば、このページを含めて様々なページの該当箇所がヒットするので、そこで初めて読んでみるといった進め方もできます。</p>
+<h2 id="_2">アルファベット、文字、文字列、言語</h2>
+<p>アルファベットを任意の空でない集合とし、文字をアルファベットの元とし、文字列を文字からなる列とし、言語を文字列の集合とします。</p>
+<p>アルファベット <span class="arithmatex">\(\lbrace 0,1 \rbrace\)</span> から作られる任意の文字列から成る言語を <span class="arithmatex">\(\lbrace 0,1 \rbrace ^*\)</span> と表します。また、この言語の文字列をバイナリ列と呼びます。バイナリ列の長さを <span class="arithmatex">\(n\)</span> に限定した場合、その言語を <span class="arithmatex">\(\lbrace 0,1\rbrace ^n\)</span> と表します。例えば、 <span class="arithmatex">\(01011 \in \lbrace 0,1\rbrace ^5\)</span> です。</p>
+<h2 id="_3">確率的多項式時間アルゴリズム</h2>
+<p>アルゴリズムの入力と出力をバイナリ列とします。</p>
+<p>「アルゴリズム <span class="arithmatex">\(A\)</span> が多項式時間アルゴリズムである」とは、 入力を <span class="arithmatex">\(x\)</span> とし、その長さを <span class="arithmatex">\(|x|\)</span> として、アルゴリズム <span class="arithmatex">\(A\)</span> を実行するステップ数が <span class="arithmatex">\(|x|\)</span> の多項式で抑えられることを意味します。</p>
+<!-- 
+より形式的には、 $\mathrm{Time}(\cdot)$ をアルゴリズムのステップ数を出力する関数、 $f(\cdot)$ を多項式として、 
+$$ \mathrm{Time}(A(x)) \le f(|x|) \quad (\forall x \in \lbrace 0,1\rbrace^* ) $$
+と表せます。
+-->
+
+<p>「アルゴリズム <span class="arithmatex">\(A\)</span> が確率的アルゴリズムである」とは、アルゴリズム <span class="arithmatex">\(A\)</span> がその内部で適当な長さの乱数を使用して、実行結果がその乱数に依存して決まることを意味します。逆に、確率的アルゴリズムではないアルゴリズムを決定的アルゴリズムと言います。</p>
+<p>「アルゴリズム <span class="arithmatex">\(A\)</span> が確率的多項式時間アルゴリズムである」とは、アルゴリズム <span class="arithmatex">\(A\)</span> が多項式時間アルゴリズムかつ確率的アルゴリズムであることを意味します。</p>
+<p>以下、確率的多項式時間アルゴリズムという記述があれば、暗に「効率的に実行できる」という意味を含んでいると考えてください。</p>
+<h2 id="negligibleoverwhelming">関数のnegligibleとoverwhelming</h2>
+<p>安全性の定義や証明にnegligibleな関数やoverwhelmingな関数が使われます。これらの関数は、次のように定義されます。</p>
+<div class="admonition formal">
+<p class="admonition-title">negligibleな関数</p>
+<p>自然数の集合を <span class="arithmatex">\(\mathbb{N}\)</span> とし、 <span class="arithmatex">\(0\)</span> 以上 <span class="arithmatex">\(1\)</span> 以下の実数区間を <span class="arithmatex">\([0,1]\)</span> とする。関数 <span class="arithmatex">\(\varepsilon: \mathbb{N}\to [0,1]\)</span> が次の式を満たすとき、その関数はnegligibleであるという。</p>
+<div class="arithmatex">\[ \forall c &gt; 0,\ \exists k,\ \forall n\ge k,\ \varepsilon(n) &lt; \frac{1}{n^c} \]</div>
+</div>
+<p>すなわち、negligibleな関数とは、どれだけ大きな実数 <span class="arithmatex">\(c\)</span> でも、ある実数 <span class="arithmatex">\(k\)</span> が存在して、 <span class="arithmatex">\(k\)</span> 以上の全ての <span class="arithmatex">\(n\)</span> に対して、 <span class="arithmatex">\(\varepsilon(n)\)</span> は <span class="arithmatex">\(1/n^c\)</span> より小さい関数である、ということです。直感的には、関数 <span class="arithmatex">\(\varepsilon\)</span> はどんな多項式関数の逆数よりも小さい関数である、ということです。</p>
+<p>逆に、「関数 <span class="arithmatex">\(\kappa:\mathbb{N} \to [0,1]\)</span> がoverwhelmingである」とは、 <span class="arithmatex">\(1-\kappa\)</span> がnegligibleな関数であることと定義します。</p>
+<p>また、簡略的に <span class="arithmatex">\(f(x)\)</span> がnegligibleであることを <span class="arithmatex">\(f(x) \approx 0\)</span> 、 <span class="arithmatex">\(f(x)\)</span> がoverwhelmingであることを <span class="arithmatex">\(f(x)\approx 1\)</span> と表記することにします。</p>
+<p>安全性の議論において、 <span class="arithmatex">\(\lambda\)</span> をセキュリティパラメーター（イメージとしては鍵などのビット数）として、「この確率が <span class="arithmatex">\(\varepsilon(\lambda)\)</span> より小さいなら安全だよね」あるいは「この確率が <span class="arithmatex">\(\kappa(\lambda)\)</span> より大きいなら安全だよね」というような主張に使います。または、これは「 <span class="arithmatex">\(\lambda\)</span> が大きくなればなるほど安全性が期待できるよね」ということも意味します。</p>
+<h2 id="_4">確率変数、アンサンブル</h2>
+<p>有限集合 <span class="arithmatex">\(\Omega = \lbrace x_1,\ldots,x_n\rbrace\)</span> と、 <span class="arithmatex">\(0\)</span> 以上 <span class="arithmatex">\(1\)</span> 以下の実数空間 <span class="arithmatex">\([0,1]\)</span> において、関数 <span class="arithmatex">\(p:\Omega \to [0,1]\)</span> で、 </p>
+<div class="arithmatex">\[\sum_{i=1}^n p(x_i) = 1\]</div>
+<p>を満たすものを考えます。このとき、 <span class="arithmatex">\(\operatorname{Pr}[X=x] = p(x)\)</span> となるような変数 <span class="arithmatex">\(X\)</span> を確率変数と呼びます。また、有限集合 <span class="arithmatex">\(\Omega\)</span> を標本空間と呼び、関数 <span class="arithmatex">\(p\)</span> を確率分布と呼びます。</p>
+<p>例えばコイントスで、表が出ることを <span class="arithmatex">\(1\)</span> 、裏が出ることを <span class="arithmatex">\(0\)</span> として定義すると、 <span class="arithmatex">\(\Omega = \lbrace 0,1 \rbrace\)</span> であり、 <span class="arithmatex">\(p(0)=p(1)=\frac{1}{2}\)</span> であり、 <span class="arithmatex">\(\operatorname{Pr}[X = 0] = \operatorname{Pr}[X = 1] = \frac{1}{2}\)</span> です。</p>
+<p>確率変数は数学的には関数であり、上記では <span class="arithmatex">\(X : \Omega \to \Omega\)</span> となっていますが、正確にはある標本空間 <span class="arithmatex">\(\Omega\)</span> から実数 <span class="arithmatex">\(\mathbb{R}\)</span> への関数として定義されます。例として <span class="arithmatex">\(n\)</span> 回のコイントスを考えてみます。標本空間 <span class="arithmatex">\(\Omega\)</span> を <span class="arithmatex">\(\lbrace 0,1 \rbrace^n\)</span> とします。バイナリ列 <span class="arithmatex">\(x = (x_1,\ldots,x_n) \in \Omega\)</span> は、コインを <span class="arithmatex">\(n\)</span> 回投げたときの結果の列と見なせます。そして、 <span class="arithmatex">\(n\)</span> 回のコイントスの結果の列から <span class="arithmatex">\(i\)</span> 回目の結果への関数 <span class="arithmatex">\(X_i: \Omega \to \lbrace 0,1 \rbrace\)</span>  は確率変数となります。また、 <span class="arithmatex">\(S = X_1 + \cdots + X_n\)</span> は <span class="arithmatex">\(n\)</span> 回のコイントスで表が出た回数を表す確率変数となります。</p>
+<p>確率変数として、ある標本空間 <span class="arithmatex">\(\Omega\)</span> から実数 <span class="arithmatex">\(\mathbb{R}^n\)</span> への関数を考えることができ、この確率変数を多次元確率変数と呼びます。この資料では、多次元確率変数も単に確率変数と呼ぶことにし、多次元確率変数として、ある標本空間 <span class="arithmatex">\(\Omega\)</span> からバイナリ列の集合 <span class="arithmatex">\(\lbrace 0,1 \rbrace^*\)</span>  への関数を考えることがあります。例えばバイナリ列 <span class="arithmatex">\(01011\)</span> が出現する確率が <span class="arithmatex">\(\frac{1}{2}\)</span> となるときに <span class="arithmatex">\(\operatorname{Pr}[X = 01011] = \frac{1}{2}\)</span> と表すといった使い方をします。</p>
+<p>確率変数 <span class="arithmatex">\(X\)</span> から確率分布 <span class="arithmatex">\(p\)</span> に従ってサンプル <span class="arithmatex">\(x\)</span> を一つ取り出すことを <span class="arithmatex">\(x\leftarrow X\)</span> と表記し、一様ランダムにサンプル <span class="arithmatex">\(x\)</span> を一つ取り出すこと明示したい場合は <span class="arithmatex">\(x \stackrel{\$}{\leftarrow} X\)</span> と表記します。また簡略して、確率変数ではなくその標本集合を使って、 <span class="arithmatex">\(x \leftarrow \Omega\)</span> と書く場合もあります。</p>
+<p><span class="arithmatex">\(I\)</span> を可算集合とします。確率変数の族 <span class="arithmatex">\(X=\lbrace X_i \rbrace_{i\in I}\)</span> を集合 <span class="arithmatex">\(I\)</span> でインデックスされたアンサンブルと呼びます。ここで、 <span class="arithmatex">\(X_i\)</span> が確率変数です。例えば、上記の <span class="arithmatex">\(n\)</span> 回のコイントスにおいて、 <span class="arithmatex">\(I=\lbrace 1,\ldots,n\rbrace\)</span> としたアンサンブル <span class="arithmatex">\(X=\lbrace X_i \rbrace_{i \in I}\)</span> を考えることができます。また、集合 <span class="arithmatex">\(I\)</span> にバイナリ列を設定することがあります。その場合、アンサンブルは <span class="arithmatex">\(X=\lbrace X_w \rbrace_{w \in \lbrace 0,1 \rbrace ^n }\)</span> などと表します。 </p>
+<h2 id="_5">識別不可能性</h2>
+<p>識別不可能性（indistinguishability）とは、二つのアンサンブルを見分けられない性質です。見分ける主体の能力と観測する値の数にどういった仮定を設定するかによって、パーフェクト識別不可能性・統計的識別不可能性・計算量的識別不可能性の3つパターンの定義付けが可能です。パーフェクト &gt; 統計的 &gt; 計算量的の順に識別不可能の度合いが緩くなります。それぞれ説明します。</p>
+<p>以下、アンサンブル <span class="arithmatex">\(X = \lbrace X_w\rbrace_{w \in \lbrace 0,1 \rbrace^n},\ Y = \lbrace Y_w\rbrace_{w \in \lbrace 0,1 \rbrace^n}\)</span> を考えます。</p>
+<div class="admonition formal">
+<p class="admonition-title">パーフェクト識別不可能性（perfect indistinguishability）</p>
+<p>次の式を満たすとき、アンサンブル <span class="arithmatex">\(X\)</span> とアンサンブル <span class="arithmatex">\(Y\)</span> はパーフェクト識別不可能であるという。</p>
+<div class="arithmatex">\[ \forall \alpha \in \lbrace 0,1 \rbrace^n ,\ \operatorname{Pr}[X_w\to \alpha] = \operatorname{Pr}[Y_w\to \alpha] \]</div>
+</div>
+<p>簡単に言うと、どれだけ計算能力があっても、どれだけの値を観測したとしても、与えられたアンサンブルがどちらであるか見分けることができないという性質です。</p>
+<p>パーフェクト識別不可能性は日本語の文献で完全識別不可能性と呼ばれることがありますが、後述する「perfect completeness」をこれに倣って訳すと「完全完全性」になって「頭痛が痛い」みたいになってしまうため、この資料では「perfect」をそのまま「パーフェクト」と訳すことにします。また、情報理論的識別不可能性とも呼ばれます。</p>
+<div class="admonition formal">
+<p class="admonition-title">統計的識別不可能性（statistical indistinguishability）</p>
+<p>次の式を満たすとき、アンサンブル <span class="arithmatex">\(X\)</span> とアンサンブル <span class="arithmatex">\(Y\)</span> は統計的識別不可能であるという。</p>
+<div class="arithmatex">\[ \sum_{\alpha \in \lbrace 0,1\rbrace^n} \left| \operatorname{Pr}[X_w \to \alpha] = \operatorname{Pr}[Y_w\to \alpha] \right| &lt; \varepsilon(n) \]</div>
+</div>
+<p>簡単に言うと、どれだけ計算能力があっても、多項式個の値を観測しただけでは、与えられたアンサンブルがどちらであるか見分けることができないという性質です。</p>
+<div class="admonition formal">
+<p class="admonition-title">計算量的識別不可能性（computational indistinguishability）</p>
+<p>任意の確率的多項式時間アルゴリズム <span class="arithmatex">\(D\)</span> に対して次の式を満たすとき、アンサンブル <span class="arithmatex">\(X\)</span> とアンサンブル <span class="arithmatex">\(Y\)</span> は計算量的識別不可能であるという。</p>
+<div class="arithmatex">\[ |\operatorname{Pr}[D(X_w) = 1] - \operatorname{Pr}[D(Y_w) = 1]| &lt; \varepsilon(n) \]</div>
+</div>
+<p>簡単に言うと、確率的多項式時間アルゴリズムが、与えられたアンサンブルがどちらであるかを判断することが困難であるということです。確率的多項式時間アルゴリズムにとっては、計算量的識別不可能であるアンサンブルは同一であると見なせます。</p>
+<p>以下、アンサンブル <span class="arithmatex">\(X\)</span> とアンサンブル <span class="arithmatex">\(Y\)</span> がパーフェクト識別不可能であることを <span class="arithmatex">\(X\equiv Y\)</span> 、統計的識別不可能であることを <span class="arithmatex">\(X\equiv_s Y\)</span> 、計算量的識別不可能であることを <span class="arithmatex">\(X\equiv_c Y\)</span> と表記します。</p>
+<h2 id="_6">一方向性関数、一方向性置換、ハードコア述語</h2>
+<p>一方向性関数とは、効率的に計算できる一方で逆関数は効率的に計算できない関数のことです。</p>
+<div class="admonition formal">
+<p class="admonition-title">一方向性関数（one-way function）</p>
+<p>関数 <span class="arithmatex">\(f: \lbrace 0,1\rbrace^* \to \lbrace 0,1\rbrace^*\)</span> が一方向性関数であるとは、以下の2つの条件を満たすことをいう。</p>
+<p>1. ある多項式時間アルゴリズム <span class="arithmatex">\(A\)</span> に対して次の式を満たす。</p>
+<div class="arithmatex">\[ A(x) = f(x) \quad (\forall x \in \lbrace 0,1\rbrace^*) \]</div>
+<p>2. 任意の確率的多項式時間アルゴリズム <span class="arithmatex">\(A'\)</span> に対して次の式を満たす。</p>
+<div class="arithmatex">\[ \operatorname{Pr}\left[u \stackrel{\$}{\leftarrow}\lbrace 0,1\rbrace^n ; v \leftarrow A'(f(u)) \mid f(u)=f(v)\right]&lt; \varepsilon(n) \]</div>
+<p>ここで、 <span class="arithmatex">\(\lbrace 0,1\rbrace^n\)</span> はアルファベット <span class="arithmatex">\(\lbrace 0,1\rbrace\)</span> から作られる長さ <span class="arithmatex">\(n\)</span> の文字列から成る言語で、 <span class="arithmatex">\(u\)</span> はその言語から一様ランダムに選択された文字列で、 <span class="arithmatex">\(v\)</span> はアルゴリズム <span class="arithmatex">\(A'\)</span> に <span class="arithmatex">\(f(u\)</span>) を入力したときの出力（文字列）である。条件2の式は <span class="arithmatex">\(f(u)\)</span> と <span class="arithmatex">\(f(v)\)</span> が一致する確率がnegligibleであることを意味する。</p>
+</div>
+<p>一方向性関数の存在は証明されていませんが、候補として以下の関数があります。</p>
+<ul>
+<li>RSA関数</li>
+<li>有限体上のべき乗関数</li>
+<li>NP完全問題に基づく関数</li>
+</ul>
+<p>また、 <span class="arithmatex">\(f(u)\)</span> から <span class="arithmatex">\(u\)</span> を効率的に計算することはできませんが、 <span class="arithmatex">\(u\)</span> の部分情報を求めることは簡単である場合が多いです。しかし、 <span class="arithmatex">\(f(u)\)</span> からどうしても求められない <span class="arithmatex">\(u\)</span> の1ビットの情報が必ず存在することが知られています。この1ビットの情報のことを <span class="arithmatex">\(f\)</span> のハードコア述語（hard-core predicate）と呼びます。述語（predicate）とは、出力が1ビットの関数のことです。ハードコア述語は形式的には次のように定義されます。</p>
+<div class="admonition formal">
+<p class="admonition-title">ハードコア述語</p>
+<p>多項式時間で計算可能な述語 <span class="arithmatex">\(b:\lbrace 0,1 \rbrace ^* \to \lbrace 0,1 \rbrace\)</span> に対して、 <span class="arithmatex">\(b\)</span> が <span class="arithmatex">\(f\)</span> のハードコア述語であるとは、任意の確率的多項式時間アルゴリズム <span class="arithmatex">\(A\)</span> に対して、あるnegligibleな関数 <span class="arithmatex">\(\varepsilon\)</span> が存在して、次の式が成り立つことをいう。</p>
+<div class="arithmatex">\[ \operatorname{Pr}\left[u \stackrel{\$}{\leftarrow}\lbrace 0,1\rbrace^n \mid A(f(u))=b(u)\right]&lt;\frac{1}{2}+\varepsilon(n) \]</div>
+</div>
+<p>全単射写像を置換と呼ぶように、一方向性関数のうち全単射写像であるものを一方向性置換（one-way permutation）と呼びます。</p>
+<h2 id="turing">確率的多項式時間Turingマシン</h2>
+<p>Turingマシンは計算機のモデルの一つです。その定義やイメージに関しては、他の文献を参照してもらうとして、ここではゼロ知識証明の文脈で必要な確率的多項式時間Turingマシンとそれに関する用語について簡単に説明します。</p>
+<p>確率的Turingマシンは、非決定性Turingマシンの一種で、非決定性Turingマシンにおいて枝に確率が割り当てられたものと捉えることができます。また、確率的Turingマシンがある文字列を受理する確率は、確率的Turingマシンが次のどの枝を進むかどうかを確率的に決めていると捉えることができます。</p>
+<p>「確率的Turingマシンが言語を認識する」とは、ある誤り確率 <span class="arithmatex">\(\epsilon\)</span> のもとで、その言語に含まれる全ての文字列を受理し、その言語に含まれない全ての文字列を却下するということを意味します。すなわち、任意の <span class="arithmatex">\(w\)</span> に対して、 <span class="arithmatex">\(w\in \mathcal{L}\)</span> のとき <span class="arithmatex">\(w\)</span> を受理する確率が <span class="arithmatex">\(1-\epsilon\)</span> 以上で、 <span class="arithmatex">\(w\notin \mathcal{L}\)</span> のとき <span class="arithmatex">\(w\)</span> を却下する確率が <span class="arithmatex">\(1-\epsilon\)</span> 以上であるということです。</p>
+<p>確率的多項式時間Turingマシンとは、単に多項式時間で動作する確率的Turingマシンのことです。</p>
+<h2 id="2">2者間プロトコルの安全性とシミュレーションパラダイム</h2>
+<p>2者間プロトコル <span class="arithmatex">\(\Pi\)</span> を、対話を行う確率的多項式Turingマシンの組 <span class="arithmatex">\((P_1,P_2)\)</span> とします。文字列 <span class="arithmatex">\(x_1,x_2\)</span> をそれぞれマシン <span class="arithmatex">\(P_1,P_2\)</span> に対する入力とし、マシン <span class="arithmatex">\(P_1,P_2\)</span> に <span class="arithmatex">\(x_1,x_2\)</span> を与えられるとそれぞれ文字列 <span class="arithmatex">\(y_1 = P_1(x_1),y_2 = P_2(x_2)\)</span> を出力するとします。</p>
+<p>2者間プロトコルが安全であることを証明するにはどうしたらよいでしょうか。そのための手法の一つとして、シミュレーションパラダイムがあります。シミュレーションパラダイムとは、簡単に言えば、そのプロトコルが実現する機能を提供する信頼できるサードパーティー（trusted third party; TTP）がいる世界あったとして、敵対者の視点でどのように現実世界で振る舞ってもその世界で得られる情報と変わらないとき、そのプロトコルは安全であると証明する手法です。その世界のことを理想世界と呼びます。逆に正直なパーティー視点で言えば、現実世界で敵対者がどのように振る舞ってもその理想世界でTTPが教えてくれる情報と変わらないということです。 </p>
+<p>図で説明します。2者間プロトコル <span class="arithmatex">\(\Pi=(P_1,P_2)\)</span> が実現しようとしている機能を <span class="arithmatex">\(\mathcal{F}\)</span> とします。機能 <span class="arithmatex">\(\mathcal{F}\)</span> を実行するTTPも <span class="arithmatex">\(\mathcal{F}\)</span> と表すこととします。シミュレーションパラダイムのイメージとしては、下図において、<strong>任意</strong>の敵対者に対する現実世界（左）と<strong>ある</strong>敵対者に対する理想世界（右）が変わらないことを証明することです。 図において <span class="arithmatex">\(A\)</span> を現実世界の敵対者、 <span class="arithmatex">\(B\)</span> を理想世界での敵対者とします。</p>
+<div align="center"><img src="https://i.gyazo.com/19ebfff034c90f78aa2878afeb41abe1.png"></div>
+
+<p>「どんな敵対者を考えた現実世界でも、ある一つの理想世界と同じだよね」と言えれば安全ということです。そうなるような敵対者 <span class="arithmatex">\(B\)</span> をどう構成するのかが証明において大事になってきます。</p>
+<p>もう少し形式的に説明していきます。機能 <span class="arithmatex">\(\mathcal{F}\)</span> はパーティーへの入力 <span class="arithmatex">\(x_1,x_2\)</span> を入力とし、パーティーの出力 <span class="arithmatex">\(y_1, y_2\)</span> を出力する確率的Turingマシンです。つまり、マシン <span class="arithmatex">\(\mathcal{F}\)</span> は2つのマシン <span class="arithmatex">\(P_1, P_2\)</span> の振る舞いを再現します。</p>
+<div class="arithmatex">\[ \mathcal{F}(x_1,x_2) = (P_1(x_1), P_2(x_2)) \]</div>
+<p>TTPである <span class="arithmatex">\(\mathcal{F}\)</span> は、インフォーマルですが、誰とも結託せず公正に機能 <span class="arithmatex">\(\mathcal{F}\)</span> を実行します。このとき、このTTP <span class="arithmatex">\(\mathcal{F}\)</span> がいる理想世界ではプロトコル <span class="arithmatex">\(\Pi\)</span> の安全な実行は簡単にできます。パーティー <span class="arithmatex">\(P_1,P_2\)</span> はそれぞれの入力 <span class="arithmatex">\(x_1,x_2\)</span> をTTP <span class="arithmatex">\(\mathcal{F}\)</span> に渡し出力 <span class="arithmatex">\(y_1,y_2\)</span> を得れば終わりです。</p>
+<p>具体例として、じゃんけんプロトコル <span class="arithmatex">\(\Pi_{\mathrm{rsp}}\)</span> を考えてみましょう。2者間プロトコルでじゃんけんを行うには工夫が必要ですが、プロトコル <span class="arithmatex">\(\Pi_{\mathrm{rsp}}\)</span> が実現する機能 <span class="arithmatex">\(\mathcal{F_{\mathrm{rsp}}}\)</span> を実行してくれるTTPが存在する場合、各パーティーがそのTTPにじゃんけんの手を与えて、TTPから勝ち負けの情報を得たら簡単にじゃんけんプロトコルを実現できることがわかります。ここで敵対者がいたとしてどのように行動しても不正行為ができないことは明らかです。敵対者ができる行動としては「グー」「チョキ」「パー」「それ以外」のどれかで、最後の一つは現実のじゃんけんと同様に負けとなるとします。「どれも与えない」という行動は、時間を考慮する場合に成り立つ行動なので考えません。TTPがじゃんけんの手を仲介するため、敵対者は相手の手を見てから自分の手を出すこと、いわゆる後出しができません。よって、TTPがいれば安全にプロトコルの実行ができることがわかります。</p>
+<p>敵対者 <span class="arithmatex">\(A\)</span> によって攻撃されたプロトコル <span class="arithmatex">\((A,P_2)\)</span> あるいは <span class="arithmatex">\((P_1, A)\)</span> の出力の確率変数を <span class="arithmatex">\(\mathrm{REAL}_{\Pi,A}(x_1,x_2)\)</span> とします。これは、出力が <span class="arithmatex">\(y_1,y_2\)</span> となる確率を <span class="arithmatex">\(p(y_1,y_2)\)</span> として、 </p>
+<div class="arithmatex">\[\operatorname{Pr}[\mathrm{REAL}_{\Pi,A}(x_1,x_2)=(y_1,y_2)] = p(y_1,y_2)\]</div>
+<p>ということです。また、 <span class="arithmatex">\(x_1,x_2\)</span> をパラメーターとする族を <span class="arithmatex">\(\mathrm{REAL}_{\Pi,A}\)</span> とします。まとめると、次の式になります。</p>
+<div class="arithmatex">\[ \operatorname{REAL}_{\Pi, A}= \left\lbrace\operatorname{REAL}_{\Pi, A} \left(x_1, x_2 \right) \right\rbrace_{x_1, x_2} \]</div>
+<p>この理想世界において敵対者 <span class="arithmatex">\(B\)</span> を考えてみましょう。敵対者 <span class="arithmatex">\(B\)</span> はパーティー <span class="arithmatex">\(P_1,P_2\)</span> どちらかの振る舞いをすることになります。 <span class="arithmatex">\(B\)</span> が <span class="arithmatex">\(P_1\)</span> の振る舞いをするとき、 <span class="arithmatex">\(B\)</span> はまず <span class="arithmatex">\(x_1\)</span> を受け取ります。 <span class="arithmatex">\(B\)</span> はこの <span class="arithmatex">\(x_1\)</span> から加工した情報 <span class="arithmatex">\(x_1'\)</span> を作成できます。この <span class="arithmatex">\(x_1'\)</span> を <span class="arithmatex">\(x_1\)</span> の代わりに <span class="arithmatex">\(\mathcal{F}\)</span> に与えることができます。すると、 <span class="arithmatex">\(\mathcal{F_i}\)</span> を <span class="arithmatex">\(\mathcal{F}\)</span> の出力の <span class="arithmatex">\(i\)</span> 番目の項として、 <span class="arithmatex">\(\mathcal{F}\)</span> が <span class="arithmatex">\(B\)</span> に与える情報は <span class="arithmatex">\(\mathcal{F}_1 (x_1',x_2)\)</span> となり、 <span class="arithmatex">\(P_2\)</span> に与える情報は <span class="arithmatex">\(F_2(x_1',x_2)\)</span> となります。よって、理想世界における出力は組 <span class="arithmatex">\((B(x_1, \mathcal{F}_1(x_1', x_2)), \mathcal{F}_2(x_1', x_2))\)</span> です。同様にして、 <span class="arithmatex">\(B\)</span> が <span class="arithmatex">\(P_2\)</span> の振る舞いをするときの出力が求まります。</p>
+<p>まとめると、理想世界における出力の確率変数 <span class="arithmatex">\(\operatorname{IDEAL}_{\mathcal{F},B}(x_1,x_2)\)</span> は次のようになります。</p>
+<div class="arithmatex">\[ \operatorname{IDEAL}_{\mathcal{F}, B}\left(x_1, x_2\right)=\left\lbrace\begin{array}{l}
+\left(B\left(x_1, \mathcal{F}_1\left(x_1', x_2\right)\right), \mathcal{F}_2\left(x_1', x_2\right)\right) \\
+\left(\mathcal{F}_1\left(x_1, x_2'\right), B\left(x_2, \mathcal{F}_2\left(x_1, x_2'\right)\right)\right)
+\end{array}\right. \]</div>
+<p>そして、現実世界同様にこの確率変数の族を <span class="arithmatex">\(\mathrm{IDEAL}_{\mathcal{F},B}\)</span> とします。</p>
+<div class="arithmatex">\[\operatorname{IDEAL}_{\mathcal{F}, B}=\left\lbrace\operatorname{IDEAL}_{\mathcal{F}, B}(x_1, x_2)\right\rbrace_{x_1, x_2}\]</div>
+<p>プロトコル <span class="arithmatex">\(\Pi\)</span> が機能 <span class="arithmatex">\(\mathcal{F}\)</span> を安全に実行できることは、プロトコル <span class="arithmatex">\(\Pi\)</span> に対する任意の敵対者 <span class="arithmatex">\(A\)</span> に対して、機能 <span class="arithmatex">\(\mathcal{F}\)</span> に対するある敵対者 <span class="arithmatex">\(B\)</span> が存在して、以下の式が成り立つことを示せば良いです。</p>
+<div class="arithmatex">\[ \mathrm{REAL}_{\Pi,A} \equiv_c \mathrm{IDEAL}_{\mathcal{F},B} \]</div>
+<p>敵対者 <span class="arithmatex">\(B\)</span> の構成方法ですが、一般的な手法として <span class="arithmatex">\(B\)</span> の内部で敵対者 <span class="arithmatex">\(A\)</span> を利用して、その <span class="arithmatex">\(A\)</span> に対して正直なパーティーをシミュレートするというものがあります。イメージとしては次のようになります。</p>
+<div align="center"><img src="https://i.gyazo.com/ec172d9743f1cd1b2b2805c6338f32d4.png"></div>
+
+<p>なぜこれで上手く <span class="arithmatex">\(B\)</span> を構成できるかというと、インフォーマルには <span class="arithmatex">\(B\)</span> の内部で <span class="arithmatex">\(A\)</span> を利用することで現実世界の確率分布を理想世界に持ってくることができ、その理想世界の確率分布が現実世界の確率分布と変わらないよね、という主張が作れるからです。このような構成にして、この理想世界における出力 <span class="arithmatex">\((B(x_1,\mathcal{F}_1(x_1',x_2)), \mathcal{F}_2(x_1',x_2))\)</span> が現実世界の出力 <span class="arithmatex">\((A(x_1),P_2(x_2))\)</span> と変わらないことを示せれば良いということです。 <span class="arithmatex">\(B\)</span> が正直なパーティーのシミュレートをすることから、 <span class="arithmatex">\(B\)</span> をシミュレーターと呼ぶことがあります。</p>
+<h2 id="_7">計算複雑性クラス</h2>
+<p>計算複雑性クラスとは、言語の判定に必要な計算量で言語を分類したときの言語の集合のことです。ここでは計算複雑性クラス <span class="arithmatex">\(\mathrm{P},\mathrm{NP},\mathrm{BPP}\)</span> について説明します。</p>
+<p>クラス <span class="arithmatex">\(\mathrm{P}\)</span> は <span class="arithmatex">\(x\)</span> を文字列として、 <span class="arithmatex">\(x \in \mathcal{L}\)</span> かどうかを <span class="arithmatex">\(|x|\)</span> の多項式時間で決定できるアルゴリズムが存在する言語 <span class="arithmatex">\(\mathcal{L}\)</span> のクラスです。</p>
+<p>クラス <span class="arithmatex">\(\mathrm{P}\)</span> とは、 <span class="arithmatex">\(x,w\)</span> を文字列として、 <span class="arithmatex">\(w\)</span> が <span class="arithmatex">\(x\in\mathcal{L}\)</span> の有効なウィットネスであるかどうかを <span class="arithmatex">\(|x|\)</span> の多項式時間で決定できるアルゴリズムが存在する言語 <span class="arithmatex">\(\mathcal{L}\)</span> のクラスです。 <span class="arithmatex">\(\mathrm{NP}\)</span> において <span class="arithmatex">\(w\)</span> を長さ0の文字列と考えると、 <span class="arithmatex">\(\mathrm{P}\)</span> と同じと捉えられます。クラス <span class="arithmatex">\(\mathrm{P}\)</span> は明らかに <span class="arithmatex">\(\mathrm{NP}\)</span> に含まれますが、 <span class="arithmatex">\(\mathrm{NP}\)</span> が <span class="arithmatex">\(\mathrm{P}\)</span> に含まれるかは未解決問題です。</p>
+<p>要は、 <span class="arithmatex">\(\mathrm{P}\)</span> と <span class="arithmatex">\(\mathrm{NP}\)</span> は次のようにまとめられます。</p>
+<ul>
+<li><span class="arithmatex">\(\mathrm{P}\)</span> は、言語の要素であることを多項式時間で判定できる言語の集合</li>
+<li><span class="arithmatex">\(\mathrm{NP}\)</span> は、言語の要素であることを<strong>補助情報を使えば</strong>多項式時間で判定できる言語の集合</li>
+</ul>
+<p><span class="arithmatex">\(\mathrm{P}\)</span> と <span class="arithmatex">\(\mathrm{NP}\)</span> をTuringマシンを使った定義は次のようになります。まず、 <span class="arithmatex">\(\mathbb{R}^+\)</span> を <span class="arithmatex">\(0\)</span> より大きい実数の集合とします。関数 <span class="arithmatex">\(t:\mathbb{N} \to \mathbb{R}^+\)</span> において、Turingマシンで <span class="arithmatex">\(O(t(n))\)</span> 時間で判定できる全ての言語の集合を、 <span class="arithmatex">\(\operatorname{TIME}(t(n))\)</span> と定義します。また、非決定性Turingマシンで <span class="arithmatex">\(O(t(n))\)</span> 時間で判定できる全ての言語の集合を、 <span class="arithmatex">\(\operatorname{NTIME}(t(n))\)</span> と定義します。 <span class="arithmatex">\(\mathrm{P}\)</span> と <span class="arithmatex">\(\mathrm{NP}\)</span> は以下の数式で定義されます。</p>
+<div class="arithmatex">\[ \mathrm{P}=\bigcup_k \operatorname{TIME}\left(n^k\right), \quad \mathrm{NP}=\bigcup_k \operatorname{NTIME}\left(n^k\right) \]</div>
+<p><span class="arithmatex">\(\mathrm{NP}\)</span> において、非決定性Turingマシンを使った定義と、最初のウィットネスを用いた説明は等価であることが証明できますが、ここでは省略します。</p>
+<p>クラス <span class="arithmatex">\(\mathrm{BPP}\)</span> （bounded-error probabilistic polynomial timeの略）は、確率的多項式時間Turingマシンによる <span class="arithmatex">\(w\in \mathcal{L}\)</span> の判定の誤りを確率 <span class="arithmatex">\(\frac{1}{3}\)</span> で許す言語 <span class="arithmatex">\(\mathcal{L}\)</span> のクラスです。誤り確率の <span class="arithmatex">\(\frac{1}{3}\)</span> という値が中途半端だと思われるかもしれませんが、この値は <span class="arithmatex">\(0\)</span> より大きく <span class="arithmatex">\(\frac{1}{2}\)</span> 未満の値であればどんな値でもよく、それらが等価であることが次の増幅補題（amplification lemma）によって示せます。</p>
+<div class="admonition formal">
+<p class="admonition-title">増幅補題</p>
+<p><span class="arithmatex">\(\epsilon\)</span> を <span class="arithmatex">\(0\)</span> より大きく <span class="arithmatex">\(\frac{1}{2}\)</span> 未満の定数である誤り確率とし、 <span class="arithmatex">\(\operatorname{poly}(n)\)</span> を <span class="arithmatex">\(n\)</span> の多項式とする。誤り確率 <span class="arithmatex">\(\epsilon\)</span> の確率的多項式時間Turingマシン <span class="arithmatex">\(M\)</span> を用いて、誤り確率 <span class="arithmatex">\(2^{-\mathrm{poly(n)}}\)</span> の等価な確率的多項式時間Turingマシン <span class="arithmatex">\(M'\)</span> を構築できる。</p>
+</div>
+<p>増幅補題の証明は省略しますが、簡単なイメージとしては、マシン <span class="arithmatex">\(M\)</span> を複数回独立に動作してその結果の多数決をとることでマシン <span class="arithmatex">\(M'\)</span> を構成できるというものです。例えば、ある文字列が言語に含まれ、マシン <span class="arithmatex">\(M\)</span> がその文字列を受理すべきときに、マシン <span class="arithmatex">\(M\)</span> を3回実行して多数決を取った結果の確率は、次のように計算できます。ここで、「o」が正しく受理したことを、「x」が誤って却下したことを表します。</p>
+<table>
+<thead>
+<tr>
+<th align="center">1回目</th>
+<th align="center">2回目</th>
+<th align="center">3回目</th>
+<th align="center">多数決</th>
+<th align="center">確率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{2}{3}\cdot \frac{2}{3} \cdot \frac{2}{3} = \frac{8}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center">x</td>
+<td align="center">o</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{2}{3}\cdot \frac{2}{3} \cdot \frac{1}{3} = \frac{4}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">o</td>
+<td align="center">x</td>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{2}{3}\cdot \frac{1}{3} \cdot \frac{2}{3} = \frac{4}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">x</td>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center">o</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{1}{3}\cdot \frac{2}{3} \cdot \frac{2}{3} = \frac{4}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">o</td>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{2}{3}\cdot \frac{1}{3} \cdot \frac{1}{3} = \frac{2}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">x</td>
+<td align="center">o</td>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{1}{3}\cdot \frac{2}{3} \cdot \frac{1}{3} = \frac{2}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center">o</td>
+<td align="center">x</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{1}{3}\cdot \frac{1}{3} \cdot \frac{2}{3} = \frac{2}{27}\)</span></td>
+</tr>
+<tr>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center">x</td>
+<td align="center"><span class="arithmatex">\(\displaystyle \frac{1}{3}\cdot \frac{1}{3} \cdot \frac{1}{3} = \frac{1}{27}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>多数決の結果が誤る確率は <span class="arithmatex">\(\frac{2}{27}\cdot{3} + \frac{1}{27} = \frac{7}{27}\)</span> となることがわかります。これはマシン <span class="arithmatex">\(M\)</span> の誤り確率 <span class="arithmatex">\(\frac{1}{3} = \frac{9}{27}\)</span> より小さい値です。動作させる回数を増やしていけば、誤り確率が減少していくことが直感的にわかると思います。そしてこの誤り確率の減少は動作回数に対して指数的であることが証明できます。</p>
+<h2 id="np">関係、二項関係、NP関係</h2>
+<div class="admonition formal">
+<p class="admonition-title">関係（relation）</p>
+<p><span class="arithmatex">\(A\)</span> を集合とする。定義域を <span class="arithmatex">\(k\)</span> 個の集合の組 <span class="arithmatex">\(A\times \cdots \times A\)</span> として、値域を <span class="arithmatex">\(\lbrace\mathrm{TRUE}, \mathrm{FALSE}\rbrace\)</span> とする関数 <span class="arithmatex">\(R\)</span> を、関係という。特に <span class="arithmatex">\(k=2\)</span> のとき、二項関係（binary relation）という。</p>
+</div>
+<p>関係は定義域の部分集合のように表記することがあります。例えば、定義域を <span class="arithmatex">\(\lbrace0,1\rbrace^* \times \lbrace0,1\rbrace^*\)</span> とするある二項関係 <span class="arithmatex">\(R\)</span> を <span class="arithmatex">\(R \subseteq \lbrace0,1\rbrace^* \times \lbrace0,1\rbrace^*\)</span> と表します。また、 <span class="arithmatex">\(R(x,y) = \mathrm{TRUE}\)</span> であることを、 <span class="arithmatex">\((x,y) \in R\)</span> と表記します。</p>
+<p>計算理論において二項関係はよく出てきます。例えば、探索問題は、入力となる文字列 <span class="arithmatex">\(x \in \lbrace0,1\rbrace^*\)</span> が与えられたとき、何かしらの関係にある <span class="arithmatex">\(y\in \lbrace0,1\rbrace^*\)</span> を計算する問題と考えることができ、これは二項関係 <span class="arithmatex">\(R \subseteq \lbrace0,1\rbrace^* \times \lbrace0,1\rbrace^*\)</span> として考えられます。</p>
+<p>さらに、NP探索問題も二項関係によって定義付けることができます。 文字列 <span class="arithmatex">\(x,w\)</span> を与えて、 <span class="arithmatex">\((x,w) \in R\)</span> かどうかを判定する多項式時間アルゴリズムが存在して、 <span class="arithmatex">\((x,w) \in R\)</span> ならば <span class="arithmatex">\(|w| \le p(|x|)\)</span> となるような多項式 <span class="arithmatex">\(p\)</span> が存在するとき、関係 <span class="arithmatex">\(R\)</span> はNP探索問題であると定義します。このとき、関係 <span class="arithmatex">\(R\)</span> をNP関係と呼びます。ここで、 <span class="arithmatex">\(w\)</span> をウィットネスと呼ぶことがあります。</p>
+<!-- NOTE: GitHub Flavored Markdown で数式中の`*`,`_` が強調になる問題があるため、`\`でエスケープしている -->
+<!-- NOTE: 特性は使わないからわざわざ定義しなくて良い -->
+
+<h2 id="_8">算術回路</h2>
+<p>算術回路（arithmetic circuit）とは、多項式を計算するためのモデルであり、ラベル付きの有向非巡回グラフ（directed acyclic graph; DAG）を構成します。入力を入次数0のノードとし、その他のノードは <span class="arithmatex">\(+\)</span> あるいは <span class="arithmatex">\(\times\)</span> でラベルが付けられ、そのノードに入る有向辺の始点の多項式を、 <span class="arithmatex">\(+\)</span> なら加算、 <span class="arithmatex">\(\times\)</span> なら乗算します。出力は、インフォーマルには最後に計算されるノードの計算結果であり、そのノードを出力ノードと呼びます。ノードのことをゲート、有向辺のことをワイヤー、出力ノードから伸びるワイヤーを出力ワイヤーと呼びます。<!-- 回路のサイズをゲートの数と定義し、回路の深さを入力ノードから出力ノードへの最長経路の長さと定義します。--></p>
+<p>下図は、算術回路の例です。多項式 <span class="arithmatex">\(x^3+x+5\)</span> を計算した結果が <span class="arithmatex">\(35\)</span> であることを示しています。</p>
+<div align="center"><img src="https://i.gyazo.com/60404719937e5ff90265bfcb7cd51a5d.png"></div>
+
+<p>回路充足可能性（circuit satisfiability）問題は、ある回路が充足可能かどうかを判定する問題であり、論理回路の場合は論理回路充足可能性問題（CIRCUIT-SAT）、算術回路の場合は算術回路充足可能性問題と呼ばれます。どちらもNP完全です。</p>
+<h2 id="_9">双線形群</h2>
+<p>この資料では、双線形群 <span class="arithmatex">\((p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e, g, h)\)</span> を扱います。ここで、 <span class="arithmatex">\(\mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T\)</span> は位数が素数 <span class="arithmatex">\(p\)</span> の群であり、写像 <span class="arithmatex">\(e:\mathbb{G}_1\times\mathbb{G}_2\to\mathbb{G}_T\)</span> はペアリング（双線形写像）であるとします。また、 <span class="arithmatex">\(g,h,e(g,h)\)</span> をそれぞれ <span class="arithmatex">\(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T\)</span> の生成元とします。</p>
+<p>双線形群には <span class="arithmatex">\(\mathbb{G}_1 = \mathbb{G}_2\)</span> の対称双線形群と <span class="arithmatex">\(\mathbb{G}_1 \neq \mathbb{G}_2\)</span> の非対称双線形群があります。また、対称双線形群はType Ⅰと呼ばれ、非対称双線形群のうち、効率的に計算できる同型性 <span class="arithmatex">\(\mathbb{G}_2 \to \mathbb{G}_1\)</span> が存在するものはType Ⅱと呼ばれ、 <span class="arithmatex">\(\mathbb{G}_1\)</span> と <span class="arithmatex">\(\mathbb{G}_2\)</span> の間に効率的に計算できる同型性が存在しないものはType Ⅲと呼ばれます。非対称双線形群のうち両方向に効率的に計算できる同型性が存在するものは、対称双線形群と同じと見なせるため考えません。これら双線形群におけるペアリングは、単に「対称ペアリング」「非対称ペアリング」「Type Ⅰペアリング」「Type Ⅱペアリング」「Type Ⅲペアリング」などと呼ばれます。また、Type ⅠからType Ⅲの中で、Type Ⅲにおける演算は最も効率が良く、Groth16ではType Ⅲが使われています。</p>
+<p>表記を簡単にするために、群の元の離散対数表記を導入します。 <span class="arithmatex">\(g^a\)</span> を <span class="arithmatex">\([a]_1\)</span> 、 <span class="arithmatex">\(h^b\)</span> を <span class="arithmatex">\([b]_1\)</span> 、 <span class="arithmatex">\(e(g,h)^c\)</span> を <span class="arithmatex">\([c]_T\)</span> と表記します。このとき、 <span class="arithmatex">\(g=[1]_1,h=[1]_2,e(g,h)=[1]_T\)</span> となり、単位元は <span class="arithmatex">\([0]_1,[0]_2,[0]_T\)</span> となります。加えて、群の元からなるベクトルを <span class="arithmatex">\([\boldsymbol a]_1\)</span> のように太字で表します。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2. ゼロ知識証明の理論" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                2. ゼロ知識証明の理論
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../proof-system/" class="md-footer__link md-footer__link--next" aria-label="Next: 2.2. 証明システム" rel="next">
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Next
+                </span>
+                2.2. 証明システム
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.indexes", "navigation.footer", "toc.integrate"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.18008817.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

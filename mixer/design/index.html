@@ -1,0 +1,1533 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash">
+      
+      
+      
+        <link rel="canonical" href="https://minaminao.github.io/tornado-cats/mixer/design/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../preparation/">
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>4.1. ミキサープロトコルの設計 - Tornado Cats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.03fa9ba6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="4.1. ミキサープロトコルの設計 - Tornado Cats" >
+      
+        <meta  property="og:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  property="og:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/mixer/design.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://minaminao.github.io/tornado-cats/mixer/design/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="4.1. ミキサープロトコルの設計 - Tornado Cats" >
+      
+        <meta  name="twitter:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  name="twitter:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/mixer/design.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tornado Cats" class="md-header__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tornado Cats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.1. ミキサープロトコルの設計
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tornado Cats" class="md-nav__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    Tornado Cats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          1. イントロダクション
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1. イントロダクション
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/introduction/" class="md-nav__link">
+        1.1. はじめに
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/tornado-cash-overview/" class="md-nav__link">
+        1.2. Tornado Cashの概要
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/zkp-overview/" class="md-nav__link">
+        1.3. ゼロ知識証明の概要
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../zkp-theory/">2. ゼロ知識証明の理論</a>
+          
+            <label for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2. ゼロ知識証明の理論
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/prerequisite/" class="md-nav__link">
+        2.1. 前提知識と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/proof-system/" class="md-nav__link">
+        2.2. 証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/interactive-proof-system/" class="md-nav__link">
+        2.3. 対話型証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/interactive-zkp/" class="md-nav__link">
+        2.4. 対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/zkp-for-np/" class="md-nav__link">
+        2.5. NPに対するゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/proof-of-knowledge/" class="md-nav__link">
+        2.6. 知識の証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/argument/" class="md-nav__link">
+        2.7. アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/nizk/" class="md-nav__link">
+        2.8. 非対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/zk-nark/" class="md-nav__link">
+        2.9. 知識の非対話型ゼロ知識アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/snarg/" class="md-nav__link">
+        2.10. 簡潔な非対話型アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/qap/" class="md-nav__link">
+        2.11. Quadratic Arithmetic Program
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../zkp-theory/groth16/" class="md-nav__link">
+        2.12. Groth16: QAPに対するzk-SNARK
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../circuit/">3. ゼロ知識証明回路の基礎</a>
+          
+            <label for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          3. ゼロ知識証明回路の基礎
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/circom/" class="md-nav__link">
+        3.1. Circomとは
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/factorization/" class="md-nav__link">
+        3.2. 回路の例: 因数分解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/compile/" class="md-nav__link">
+        3.3. 回路のコンパイル
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/r1cs/" class="md-nav__link">
+        3.4. Rank 1 Constraint System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/witness-computation/" class="md-nav__link">
+        3.5. ウィットネスの計算
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/setup-zkp/" class="md-nav__link">
+        3.6. ゼロ知識証明のセットアップ
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/generation-and-verification/" class="md-nav__link">
+        3.7. ゼロ知識証明の生成と検証
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/exercise/" class="md-nav__link">
+        3.8. 演習
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">4. ミキサープロトコルの開発</a>
+          
+            <label for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          4. ミキサープロトコルの開発
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          4.1. ミキサープロトコルの設計
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        4.1. ミキサープロトコルの設計
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    ミキシングに至る発想
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    出金時の送金元の秘匿化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    二重出金の阻止
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    高速化
+  </a>
+  
+    <nav class="md-nav" aria-label="高速化">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mimc-merkle" class="md-nav__link">
+    集合の表現 – MiMC Merkle ツリー
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pedersen" class="md-nav__link">
+    一方向性関数 – Pedersenハッシュ
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    最終的なプロトコル
+  </a>
+  
+    <nav class="md-nav" aria-label="最終的なプロトコル">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    記号一覧
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    セットアップ
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    入金フロー
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    出金フロー
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preparation/" class="md-nav__link">
+        4.2. ミキサープロトコルの全体構成と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mixer-contract/" class="md-nav__link">
+        4.3. ミキサーコントラクトの実装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../withdrawal-circuit/" class="md-nav__link">
+        4.4. 出金回路の実装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../appendix/">5. 付録</a>
+          
+            <label for="__nav_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          5. 付録
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-decentralization/" class="md-nav__link">
+        5.1. Tornado Cashの非中央集権性
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-status/" class="md-nav__link">
+        5.2. Tornado Cashの稼働状況
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-contracts/" class="md-nav__link">
+        5.3. Tornado Cash Classicのコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-circuits/" class="md-nav__link">
+        5.4. Tornado Cash Classicのゼロ知識証明回路
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-ceremony/" class="md-nav__link">
+        5.5. Tornado Cash ClassicのTrusted Setup Ceremony
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/circomlib/" class="md-nav__link">
+        5.6. CircomLib
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/precompiled-contracts-for-zk/" class="md-nav__link">
+        5.7. zk-SNARK用のプリコンパイル済みコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        6. 参考文献
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="_1">ミキサープロトコルの設計</h1>
+<p>実装に入る前に、ミキサープロトコルの仕様を決めていきます。</p>
+<h2 id="_2">ミキシングに至る発想</h2>
+<p>目標は、Ethereum上で送金を匿名化するアプリケーションを作ることです。いきなりミキサープロトコルの構成を見ても理解することが難しいと思うので、まずは、Ethereumで送金を匿名化するためにどうしたら良いかを、一から考えていきましょう。</p>
+<p>問題設定として、アリスのアドレスからボブのアドレスへの送金を匿名化することを考えます。アリスとボブが同一人物となっても問題ありませんが、それは特殊ケースとして考えます。</p>
+<p>当然の事実ですが、アリスがボブに対して単にEther送金のトランザクションを送れば、送金自体はできますが、第三者にアリスからボブへの送金があったことがわかってしまいます。Ethereumではトランザクションのデータは全て公開されますし、アドレスからアドレスへの送金トランザクションでは匿名化することは不可能です。</p>
+<p>そこで、ファーストステップとして、アリスとボブの間にコントラクトを挟むことで、送金を「入金」と「出金」の2つの操作に分け、アリスのアドレスとボブのアドレスをなんとか独立にできないだろうか、と考えます。以降、このコントラクトのことを仲介コントラクトと呼ぶことにします。</p>
+<p>これも当然のことですが、コントラクトはトランザクションを送れないので、アリスが仲介コントラクトに入金するトランザクションを発行して、ボブが仲介コントラクトから出金するトランザクションを発行する形になります。</p>
+<p>ただ、Ethereumではコントラクトの全ての情報が公開されます。トランザクションは秘匿化されないので、そのトランザクションによってデプロイされるコントラクトも秘匿化されません。また、コントラクトはトランザクションによって操作されるので、コントラクトの記憶領域（ストレージとメモリ）も秘匿化されません。</p>
+<p>よって、仲介コントラクトの情報が全て公開されていても、なんとかして送金を匿名化する手法が必要です。そのような難題を解決するために登場する技術が、ゼロ知識証明です。</p>
+<p>ゼロ知識証明を使えば、あるステートメントが真であることをそのステートメントが真であるという情報しか与えずに証明できます。もし仲介コントラクトにゼロ知識証明を使うとしたら、どのような活用ができるでしょうか。</p>
+<p>送金は入金トランザクションと出金トランザクションに分かれています。そのため、「入金時に誰へ送金するか」という情報と「出金時に誰から送金されるか」という情報を秘匿しなければなりません。</p>
+<p>ただ、入金時に送金する相手を限定するような設計にはしたくありません。ゼロ知識証明で無事入金トランザクションと出金トランザクションが独立になったとしても、「誰が入金したか」と「誰が出金したか」という情報はブロックチェーン上に記録されます。そのため、入金から出金までの時間を長くしないと確率的に入金と出金を結びつけることが可能になってしまいます。しかし、もし入金時に送金する相手を指定しなければならないということは、入金時に決めた送金相手を後から変更できないことを意味するので、十分な時間を空けることが難しくなります。</p>
+<p>それを解決するために、誰かに送金する際には、まず自分自身の別のアドレスへ一旦送金して、そこから本来の送金先アドレスに送金するという手段を取るというアイディアを浮かべるかもしれません。しかし、複数の送金先がある場合にこの手段は使えません。なぜなら、その自分自身の別のアドレスと複数の送金先が結びついてしまうからです。</p>
+<p>よって、入金時は送金先を指定せず、出金時に誰からの送金かを初めて確定させるような設計にしたいです。そして、ゼロ知識証明でその「誰からの送金か」という情報を秘匿できればよいということです。</p>
+<p>以上のようにして、コントラクトが送金を仲介して、入金時に送金先を指定せず、出金時に送金元を指定するものの、その送金元を秘匿化できるゼロ知識証明アプリケーションを開発するモチベーションに繋がります。このようなアプリケーションをミキシングと呼び、仲介コントラクトをミキサーコントラクト（あるいは単にミキサー）と呼びます。</p>
+<h2 id="_3">出金時の送金元の秘匿化</h2>
+<p>出金時に送金元を秘匿するためのゼロ知識証明プロトコルにはどのようなものが考えられるでしょうか。例えば、次のプロトコルが考えられます。</p>
+<ul>
+<li>入金者は、ある秘密の乱数 <span class="arithmatex">\(s\)</span> を生成して、ある一方向性関数 <span class="arithmatex">\(f\)</span> を適用した <span class="arithmatex">\(f(s)\)</span> を仲介コントラクトにコミットする。</li>
+<li>仲介コントラクトは、過去のコミットメント集合 <span class="arithmatex">\(C \coloneqq \bigcup_i f(s_i)\)</span> を保持する。</li>
+<li>出金者は、コミットメント集合 <span class="arithmatex">\(C\)</span> の中に含まれる <span class="arithmatex">\(f(s_i)\)</span> に対応する秘密の値 <span class="arithmatex">\(s_i\)</span> を知っていることの証明を生成し（<a href="../../zkp-theory/proof-of-knowledge/">知識の証明</a>）、仲介コントラクトにその証明を与えて検証関数を実行する。</li>
+<li>仲介コントラクトは、与えられた証明を検証して、正しい証明なら受理する。</li>
+</ul>
+<p>Groth16を使う場合、集合にある要素が含まれるかどうかの判定を算術回路で表現しなければなりません。その一つの方法として、効率的なハッシュ関数を用いたMerkleツリーを使うことが考えられます。これで、なんとかゼロ知識証明できそうです。</p>
+<p>ただし、このプロトコルは出金元を秘匿しますが、それ以外の要件で問題があります。それは、二重に出金できてしまうことです。つまり、一回の入金に対して二回以上の出金を許してしまいます。二重出金による攻撃は一般的にDouble-Spending Attackと呼ばれます。二重出金を防ぐにはどうすればよいでしょうか？</p>
+<h2 id="_4">二重出金の阻止</h2>
+<p>まず、証明のハッシュを保存してIDとして使うことで二重出金を防げると考える人がいるかもしれませんが、それでは二重出金を防げません。なぜなら証明者は値が異なる有効な証明をいくらでも作れるからです。</p>
+<p>Groth16では、証明が生成されるたびにその証明の構成要素は一様ランダムな値になります。なぜそうなるのかは、詳しくは「<a href="../../zkp-theory/groth16/">Groth16: QAPに対するzk-SNARK</a>」に書いてありますが、直感的には、証明がランダムにならなければ、証明を生成する入力を全探索して入力を特定できてしまい、パーフェクトゼロ知識性を満たさなくなってしまうことからわかるかと思います。</p>
+<p>よって、証明のハッシュを保存してIDとして使うことはできません。他の方法で一つの入金に対して一つの出金のみ許可できないでしょうか。</p>
+<p>実は秘密の乱数を2つに増やすことで、二重出金を防ぐことが可能です。そうするとプロトコルは次のような構成になります。</p>
+<ul>
+<li>入金者は、2つの秘密の乱数 <span class="arithmatex">\(k,s\)</span> を生成して、ある一方向性関数 <span class="arithmatex">\(f\)</span> を適用した <span class="arithmatex">\(f(k\| s)\)</span> を仲介コントラクトにコミットする。ここで <span class="arithmatex">\(\|\)</span> は文字列としての結合を表す。</li>
+<li>仲介コントラクトは、過去のコミットメント集合 <span class="arithmatex">\(C \coloneqq \bigcup_i f(k_i\| s_i)\)</span> を保持する。</li>
+<li>出金時は、コミットメント集合 <span class="arithmatex">\(C\)</span> の中に含まれる <span class="arithmatex">\(f(k_i\|s_i)\)</span> に対応する秘密の値 <span class="arithmatex">\(k_i\|s_i\)</span> を知っていることの証明と、その回路内で <span class="arithmatex">\(f_{k_i} = f(k_i)\)</span> を満たすことを証明した <span class="arithmatex">\(f_{k_i}\)</span> を、仲介コントラクトに与えて検証関数を実行する。 </li>
+<li>仲介コントラクトは、過去受理した証明とともに <span class="arithmatex">\(f_{k_i}\)</span> が送られてきていないかチェックし、送られてきていなければその証明を検証し、正しい証明なら受理して、 <span class="arithmatex">\(f_{k_i}\)</span> を保存する。</li>
+</ul>
+<p><span class="arithmatex">\(k_i\)</span> に対応する正しい <span class="arithmatex">\(f_{k_i}\)</span> は一つしか存在しないため、これをIDとして使えるようになります。この <span class="arithmatex">\(k\)</span> はヌリファイアと呼ばれます。</p>
+<p>以上で、ミキサープロトコルのロジックの核の部分は設計できました。次に考えるべきことは、実装を考慮した効率的なアルゴリズムとデータ構造の選択です。というのも、ゼロ知識証明の計算は重いため、なるべく計算量を小さくしないと証明生成や検証に時間がかかってしまいます。特に検証時の計算が重いと、トランザクション手数料が高額になってしまいます。そのため、ハッシュ関数やMerkleツリーは、ゼロ知識証明と計算量的に相性が良いものを選びたいです。</p>
+<h2 id="_5">高速化</h2>
+<h3 id="mimc-merkle">集合の表現 – MiMC Merkle ツリー</h3>
+<p>集合を実装するための、効率的なハッシュ関数を用いたMerkleツリーの一つに、MiMC Merkle ツリーがあります。</p>
+<p>まず前提としてMiMCハッシュというものがあります。MiMCハッシュは乗算回数が小さくなるように設計されたハッシュ関数の一つです。「Minimal Multiplicative Complexity」が由来です。ゼロ知識証明では乗法のコストが高いため、このように設計されたMiMCハッシュが有用です。MiMC Merkle ツリーとはその名の通りMiMCハッシュを利用するMerkleツリーです。</p>
+<h3 id="pedersen">一方向性関数 – Pedersenハッシュ</h3>
+<p>Pedersenハッシュはゼロ知識証明の回路で高速に計算できるハッシュ関数です。PedersenハッシュはBaby-Jubjub楕円曲線と呼ばれる楕円曲線上の離散対数問題の困難性に基づいています。</p>
+<p>今回はCircomLibに実装されているPedersenハッシュ（<a href="https://github.com/iden3/circomlib/blob/243d2ec4fc9855780632fc498d24415b5534019f/circuits/pedersen.circom">ソースコード</a>）
+を使います。この実装のもととなっている論文は、<a href="https://iden3-docs.readthedocs.io/en/latest/_downloads/4b929e0f96aef77b75bb5cfc0f832151/Pedersen-Hash.pdf">ここ</a>にあります。</p>
+<h2 id="_6">最終的なプロトコル</h2>
+<p>最終的に以下のようなミキサープロトコルを開発したいと思います。このプロトコルはTornado Cash Classicに準ずるものです。</p>
+<h3 id="_7">記号一覧</h3>
+<p>使用する主な記号の一覧です。</p>
+<table>
+<thead>
+<tr>
+<th align="right">記号</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathcal{T}\)</span></td>
+<td>高さ20のMiMC Merkle ツリー</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(R\)</span></td>
+<td><span class="arithmatex">\(\mathcal{T}\)</span> のルート</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\(\mathcal{T}\)</span> のリーフ、あるいは、そのインデックス</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(O_l\)</span></td>
+<td><span class="arithmatex">\(\mathcal{T}\)</span> のリーフ <span class="arithmatex">\(l\)</span> のMerkleオープニング</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathcal{H}\)</span></td>
+<td><span class="arithmatex">\(\mathbb Z_p\)</span> の要素のハッシュテーブル</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathrm{nullifier}\)</span></td>
+<td>ヌリファイア</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathrm{secret}\)</span></td>
+<td>シークレット</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathbb B\)</span></td>
+<td><span class="arithmatex">\(\{0,1\}\)</span></td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathbb B^*\)</span></td>
+<td><span class="arithmatex">\(\{0,1\}\)</span> の元から構成される有限列の集合</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathbb Z_p\)</span></td>
+<td><span class="arithmatex">\(\{0,1,\ldots,p-1\}\)</span></td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\operatorname{Pedersen}(\cdot)\)</span></td>
+<td><span class="arithmatex">\(\mathbb{B}^*\to \mathbb Z_p\)</span> のPedersenハッシュ関数</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\operatorname{MiMC}(\cdot)\)</span></td>
+<td><span class="arithmatex">\((\mathbb Z_p,\mathbb Z_p) \to \mathbb Z_p\)</span> のMiMCハッシュ関数</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\operatorname{Root}(\mathrm{commitment},l,O_l)\)</span></td>
+<td><span class="arithmatex">\(\mathrm{commitment},l,O_l\)</span> からルートを計算する関数</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathrm{nullifierHash}\)</span></td>
+<td><span class="arithmatex">\(\operatorname{Pedersen}(\mathrm{nullifier})\)</span></td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\mathrm{commitment}\)</span></td>
+<td><span class="arithmatex">\(\operatorname{Pedersen}(\mathrm{nullifier}\|\mathrm{secret})\)</span></td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(A_{\mathrm{recipient}}\)</span></td>
+<td>受信者のアドレス</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(A_{\mathrm{relayer}}\)</span></td>
+<td>リレイヤーのアドレス</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(f\)</span></td>
+<td>リレイヤー手数料</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(N\)</span></td>
+<td>ミキサーコントラクトが受け付けるEtherの固定量</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\pi\)</span></td>
+<td>証明（アーギュメント）</td>
+</tr>
+<tr>
+<td align="right"><span class="arithmatex">\(\sigma\)</span></td>
+<td>共通参照文字列</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_8">セットアップ</h3>
+<p>ミキサーコントラクトが持つ主なデータ構造</p>
+<ul>
+<li><span class="arithmatex">\(\mathbb Z_p\)</span> の要素を保存できる高さ20のMiMC Merkle ツリー <span class="arithmatex">\(\mathcal{T}\)</span><ul>
+<li>目的: 入金ID（<span class="arithmatex">\(\mathrm{commitment}\)</span>）の格納</li>
+</ul>
+</li>
+<li><span class="arithmatex">\(\mathbb Z_p\)</span> の要素のハッシュテーブル <span class="arithmatex">\(\mathcal{H}_{\mathrm{commitment}}\)</span><ul>
+<li>目的: 入金ID（<span class="arithmatex">\(\mathrm{commitment}\)</span>）が <span class="arithmatex">\(\mathcal{T}\)</span> に追加済みかのチェック</li>
+</ul>
+</li>
+<li><span class="arithmatex">\(\mathbb Z_p\)</span> の要素のハッシュテーブル <span class="arithmatex">\(\mathcal{H_{\mathrm{nullifierHash}}}\)</span><ul>
+<li>目的: 出金ID（<span class="arithmatex">\(\mathrm{nullifierHash}\)</span>）に紐づく出金が既に行われたかのチェック</li>
+</ul>
+</li>
+<li>サイズ100の <span class="arithmatex">\(\mathbb Z_p\)</span> の要素を格納する配列 <span class="arithmatex">\(\mathcal{A}\)</span><ul>
+<li>目的: 証明の検証に使うルートの履歴保持</li>
+</ul>
+</li>
+</ul>
+<p>ミキサーコントラクトは後述する入金関数と出金関数を持つ。出金関数は後述するステートメントに対するGroth16の証明を検証するアルゴリズムを備える。</p>
+<h3 id="_9">入金フロー</h3>
+<div class="admonition formal">
+<p class="admonition-title">入金フロー</p>
+<ul>
+<li>入金者は、入金アドレスに対応する秘密鍵を用いて次のトランザクションを発行する。<ul>
+<li>ある秘密の値 <span class="arithmatex">\(\mathrm{nullifier},\mathrm{secret} \leftarrow \mathbb Z_p\)</span> を生成する。</li>
+<li>コミットメント <span class="arithmatex">\(\mathrm{commitment} \coloneqq \operatorname{Pedersen}(\mathrm{nullifier}\| \mathrm{secret})\)</span> を計算して、ミキサーコントラクトに <span class="arithmatex">\(N\)</span> ETHとともに入金関数を呼び出すトランザクションを送る。ここで <span class="arithmatex">\(\|\)</span> は文字列としての結合を表す。</li>
+</ul>
+</li>
+<li>ミキサーコントラクトは、与えられたコミットメントに対して次の処理を行う。<ul>
+<li><span class="arithmatex">\(\mathrm{commitment}\)</span> が <span class="arithmatex">\(\mathcal{H}_{\mathrm{commitment}}\)</span> に既に追加されているかをチェックして、追加されているなら処理を中断する。</li>
+<li>Etherの入金額が <span class="arithmatex">\(N\)</span> ETH かどうかチェックして、 <span class="arithmatex">\(N\)</span> ETHでないなら処理を中断する。</li>
+<li><span class="arithmatex">\(\mathcal{H}_{\mathrm{commitment}}\)</span> に <span class="arithmatex">\(\mathrm{commitment}\)</span> を追加する。</li>
+<li><span class="arithmatex">\(\mathcal{T}\)</span> に追加されているコミットメントの数を <span class="arithmatex">\(i\)</span> として、<span class="arithmatex">\(\mathcal{T}\)</span> のインデックス <span class="arithmatex">\(i\)</span> に <span class="arithmatex">\(\mathrm{commitment}\)</span> を追加する。インデックスは zero-based であることに注意。</li>
+</ul>
+</li>
+<li>入金者は、<span class="arithmatex">\(\mathrm{nullifier},\mathrm{secret}\)</span> をローカルに保存する。</li>
+</ul>
+</div>
+<p><span class="arithmatex">\(\mathcal{T}\)</span> の高さが20であることから、最大 <span class="arithmatex">\(2^{20}\)</span> 個（約100万個）の入金を受け付けられます。</p>
+<p>ちなみに、入金者がローカルに保存する <span class="arithmatex">\(\mathrm{nullifier},\mathrm{secret}\)</span> のペアはTornado Cash Classicではノートと呼ばれます。他者への送金の場合、入金者はこのノートを出金者へ送信します。Tornado Cash Classicのクライアントで生成されるノートは<code>tornado-${currency}-${amount}-${netId}-${note}</code>というフォーマットを取っており、例えば、<code>tornado-eth-0.1-42-0xf73dd6833ccbcc046c44228c8e2aa312bf49e08389dadc7c65e6a73239867b7ef49c705c4db227e2fadd8489a494b6880bdcb6016047e019d1abec1c7652</code> となります。最後の <code>${note}</code> が <span class="arithmatex">\(\mathrm{nullifier}\)</span> と <span class="arithmatex">\(\mathrm{secret}\)</span> を結合したものです。</p>
+<h3 id="_10">出金フロー</h3>
+<p>出金者は次のステートメントに対して、Groth16で証明を生成し、ミキサーコントラクトはその証明に対して検証を行います。</p>
+<p>出金者は、まず次の2つをミキサーコントラクトに与えます。</p>
+<ul>
+<li>出金したい入金に対応する <span class="arithmatex">\(\mathrm{commitment}\)</span> </li>
+<li>その <span class="arithmatex">\(\mathrm{commitment}\)</span> を <span class="arithmatex">\(\mathcal{T}\)</span> に追加したあとのルート <span class="arithmatex">\(R\)</span> </li>
+</ul>
+<p>そして、次の4つの値を知っていることを、ミキサーコントラクトに対してゼロ知識証明します。</p>
+<ul>
+<li>その <span class="arithmatex">\(\mathrm{commitment}\)</span> に対応する <span class="arithmatex">\(\mathrm{nullifier},\mathrm{secret}\)</span> </li>
+<li>その <span class="arithmatex">\(\mathrm{commitment}\)</span> が挿入されたインデックス <span class="arithmatex">\(l\)</span> </li>
+<li>その <span class="arithmatex">\(\mathrm{commitment}\)</span> から <span class="arithmatex">\(R\)</span> へのMerkleオープニング <span class="arithmatex">\(O_l\)</span> </li>
+</ul>
+<p>証明アルゴリズムと検証アルゴリズムは次のようになります。</p>
+<div class="admonition formal">
+<p class="admonition-title">証明アルゴリズム</p>
+<p><span class="arithmatex">\(\pi \leftarrow \operatorname{Prove}(\sigma, R,\mathrm{nullifierHash},A_{\mathrm{recipient}},A_{\mathrm{relayer}},f,\mathrm{nullifier},\mathrm{secret},O_l,l)\)</span></p>
+<p>アルゴリズム <span class="arithmatex">\(\operatorname{Prove}\)</span> は以下の条件を満たす証明 <span class="arithmatex">\(\pi\)</span> を生成する。</p>
+<ul>
+<li><span class="arithmatex">\(\mathrm{nullifierHash} = \operatorname{Pedersen}(\mathrm{nullifier})\)</span> </li>
+<li><span class="arithmatex">\(\mathrm{commitment} \coloneqq \operatorname{Pedersen}(\mathrm{nullifier}\|\mathrm{secret})\)</span> とする。</li>
+<li><span class="arithmatex">\(R = \operatorname{Root}(\mathrm{commitment},l,O_l)\)</span> </li>
+<li>出金アドレスを <span class="arithmatex">\(A_{\mathrm{recipient}}\)</span> とする。</li>
+<li>リレイヤーアドレスを <span class="arithmatex">\(A_{\mathrm{relayer}}\)</span> とする。</li>
+<li>リレイヤー手数料を <span class="arithmatex">\(f\)</span> とする。</li>
+</ul>
+</div>
+<div class="admonition formal">
+<p class="admonition-title">検証アルゴリズム</p>
+<p><span class="arithmatex">\(0/1 \leftarrow \operatorname{Verify}(\sigma,R, \mathrm{nullifierHash},A_{\mathrm{recipient}},A_{\mathrm{relayer}},f,\pi)\)</span> </p>
+<p>アルゴリズム <span class="arithmatex">\(\operatorname{Verify}\)</span> は証明 <span class="arithmatex">\(\pi\)</span> が以下の条件を満たすかどうか検証して、却下を表す <span class="arithmatex">\(0\)</span> あるいは受理を表す <span class="arithmatex">\(1\)</span> を返す。</p>
+<ul>
+<li>証明者が以下の条件を満たす <span class="arithmatex">\(\mathrm{nullifier},\mathrm{secret},l,O_l\)</span> を知っている。<ul>
+<li><span class="arithmatex">\(\mathrm{nullifierHash} = \operatorname{Pedersen}(\mathrm{nullifier})\)</span> </li>
+<li><span class="arithmatex">\(\mathrm{commitment} \coloneqq \operatorname{Pedersen}(\mathrm{nullifier}\|\mathrm{secret})\)</span> とする。</li>
+<li><span class="arithmatex">\(R = \operatorname{Root}(\mathrm{commitment},l,O_l)\)</span> </li>
+</ul>
+</li>
+<li>出金アドレスとして <span class="arithmatex">\(A_{\mathrm{recipient}}\)</span> を指定している。</li>
+<li>リレイヤーアドレスとして <span class="arithmatex">\(A_{\mathrm{relayer}}\)</span> を指定している。</li>
+<li>リレイヤー手数料として <span class="arithmatex">\(f\)</span> を指定している。</li>
+</ul>
+</div>
+<p>以上より、出金フローは次のようになります。</p>
+<div class="admonition formal">
+<p class="admonition-title">出金フロー</p>
+<ul>
+<li>出金者は次の処理を行う。<ul>
+<li>前提: <span class="arithmatex">\(\mathrm{nullifier},\mathrm{secret},l,O_l\)</span> を知っている。</li>
+<li><span class="arithmatex">\(\mathrm{nullifierHash} \coloneqq \operatorname{Pedersen}(\mathrm{nullifier})\)</span> を計算する。</li>
+<li><span class="arithmatex">\(\pi \leftarrow \operatorname{Prove}(\sigma, R,\mathrm{nullifierHash},A_{\mathrm{recipient}},A_{\mathrm{relayer}},f,\mathrm{nullifier},\mathrm{secret},O_l,l)\)</span> を計算する。</li>
+<li>ミキサーコントラクトの出金関数に、<span class="arithmatex">\(R,A_{\mathrm{recipient}},A_{\mathrm{relayer},f,\pi}\)</span> を与えて呼び出す。 </li>
+</ul>
+</li>
+<li>ミキサーコントラクトは次の処理を行う。<ul>
+<li><span class="arithmatex">\(f \le N\)</span> かどうか確認して、<span class="arithmatex">\(f&gt;N\)</span> であったら処理を中断する。</li>
+<li>ハッシュテーブル <span class="arithmatex">\(\mathcal{H_{\mathrm{nullifierHash}}}\)</span> に <span class="arithmatex">\(\mathrm{nullifierHash}\)</span> が存在するかどうかチェックして、存在するならば処理を中断する。</li>
+<li>配列 <span class="arithmatex">\(\mathcal{A}\)</span> に与えられたルート <span class="arithmatex">\(R\)</span> が存在するかどうかチェックして、存在しないならば処理を中断する。</li>
+<li><span class="arithmatex">\(\mathcal{H_{\mathrm{nullifierHash}}}\)</span> に <span class="arithmatex">\(\mathrm{nullifierHash}\)</span> を追加する。</li>
+<li><span class="arithmatex">\(A_{\mathrm{recipient}}\)</span> に <span class="arithmatex">\(N-f\)</span> ETHを送信する。</li>
+<li><span class="arithmatex">\(A_{\mathrm{relayer}}\)</span> に <span class="arithmatex">\(f\)</span> ETHを送信する。</li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: 4. ミキサープロトコルの開発" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                4. ミキサープロトコルの開発
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../preparation/" class="md-footer__link md-footer__link--next" aria-label="Next: 4.2. ミキサープロトコルの全体構成と準備" rel="next">
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Next
+                </span>
+                4.2. ミキサープロトコルの全体構成と準備
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.indexes", "navigation.footer", "toc.integrate"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.18008817.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

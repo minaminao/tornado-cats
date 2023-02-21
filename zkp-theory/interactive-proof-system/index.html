@@ -1,0 +1,1287 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash">
+      
+      
+      
+        <link rel="canonical" href="https://minaminao.github.io/tornado-cats/zkp-theory/interactive-proof-system/">
+      
+      
+        <link rel="prev" href="../proof-system/">
+      
+      
+        <link rel="next" href="../interactive-zkp/">
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>2.3. 対話型証明システム - Tornado Cats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.03fa9ba6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="2.3. 対話型証明システム - Tornado Cats" >
+      
+        <meta  property="og:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  property="og:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/zkp-theory/interactive-proof-system.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://minaminao.github.io/tornado-cats/zkp-theory/interactive-proof-system/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="2.3. 対話型証明システム - Tornado Cats" >
+      
+        <meta  name="twitter:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  name="twitter:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/zkp-theory/interactive-proof-system.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tornado Cats" class="md-header__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tornado Cats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2.3. 対話型証明システム
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tornado Cats" class="md-nav__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    Tornado Cats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          1. イントロダクション
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1. イントロダクション
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/introduction/" class="md-nav__link">
+        1.1. はじめに
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/tornado-cash-overview/" class="md-nav__link">
+        1.2. Tornado Cashの概要
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/zkp-overview/" class="md-nav__link">
+        1.3. ゼロ知識証明の概要
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">2. ゼロ知識証明の理論</a>
+          
+            <label for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2. ゼロ知識証明の理論
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/" class="md-nav__link">
+        2.1. 前提知識と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proof-system/" class="md-nav__link">
+        2.2. 証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          2.3. 対話型証明システム
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        2.3. 対話型証明システム
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#turing" class="md-nav__link">
+    対話型Turingマシン
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    対話型証明システムの定義
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    対話型証明の例: グラフ非同型性判定問題
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    対話型証明システムの計算複雑性クラス
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interactive-zkp/" class="md-nav__link">
+        2.4. 対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zkp-for-np/" class="md-nav__link">
+        2.5. NPに対するゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proof-of-knowledge/" class="md-nav__link">
+        2.6. 知識の証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../argument/" class="md-nav__link">
+        2.7. アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nizk/" class="md-nav__link">
+        2.8. 非対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zk-nark/" class="md-nav__link">
+        2.9. 知識の非対話型ゼロ知識アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snarg/" class="md-nav__link">
+        2.10. 簡潔な非対話型アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qap/" class="md-nav__link">
+        2.11. Quadratic Arithmetic Program
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groth16/" class="md-nav__link">
+        2.12. Groth16: QAPに対するzk-SNARK
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../circuit/">3. ゼロ知識証明回路の基礎</a>
+          
+            <label for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          3. ゼロ知識証明回路の基礎
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/circom/" class="md-nav__link">
+        3.1. Circomとは
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/factorization/" class="md-nav__link">
+        3.2. 回路の例: 因数分解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/compile/" class="md-nav__link">
+        3.3. 回路のコンパイル
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/r1cs/" class="md-nav__link">
+        3.4. Rank 1 Constraint System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/witness-computation/" class="md-nav__link">
+        3.5. ウィットネスの計算
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/setup-zkp/" class="md-nav__link">
+        3.6. ゼロ知識証明のセットアップ
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/generation-and-verification/" class="md-nav__link">
+        3.7. ゼロ知識証明の生成と検証
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/exercise/" class="md-nav__link">
+        3.8. 演習
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../mixer/">4. ミキサープロトコルの開発</a>
+          
+            <label for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          4. ミキサープロトコルの開発
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/design/" class="md-nav__link">
+        4.1. ミキサープロトコルの設計
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/preparation/" class="md-nav__link">
+        4.2. ミキサープロトコルの全体構成と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/mixer-contract/" class="md-nav__link">
+        4.3. ミキサーコントラクトの実装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/withdrawal-circuit/" class="md-nav__link">
+        4.4. 出金回路の実装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../appendix/">5. 付録</a>
+          
+            <label for="__nav_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          5. 付録
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-decentralization/" class="md-nav__link">
+        5.1. Tornado Cashの非中央集権性
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-status/" class="md-nav__link">
+        5.2. Tornado Cashの稼働状況
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-contracts/" class="md-nav__link">
+        5.3. Tornado Cash Classicのコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-circuits/" class="md-nav__link">
+        5.4. Tornado Cash Classicのゼロ知識証明回路
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-ceremony/" class="md-nav__link">
+        5.5. Tornado Cash ClassicのTrusted Setup Ceremony
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/circomlib/" class="md-nav__link">
+        5.6. CircomLib
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/precompiled-contracts-for-zk/" class="md-nav__link">
+        5.7. zk-SNARK用のプリコンパイル済みコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        6. 参考文献
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="_1">対話型証明システム</h1>
+<p>証明システムのうち、証明者と検証者が対話的に動作する証明システムを対話型証明システム（interactive proof system）と呼びます。逆に、証明者が検証者へメッセージを送信したら、検証者が検証に取り掛かる証明システムを非対話型証明システムと呼びます。ここでは、対話型証明システムを定義します。</p>
+<h2 id="turing">対話型Turingマシン</h2>
+<p>対話型証明システムを定義するために、その構成要素となる対話型Turingマシン（interactive Turing machine; ITM）について説明します。ITMとは、以下の複数のテープを持つTuringマシンです。</p>
+<ul>
+<li>読み出し専用の入力テープ</li>
+<li>読み出し専用のランダムテープ</li>
+<li>読み書き可能な作業テープ</li>
+<li>書き込み専用の出力テープ</li>
+<li>読み出し専用の通信テープ</li>
+<li>書き込み専用の通信テープ</li>
+<li>読み書き可能なスイッチテープ</li>
+</ul>
+<p>さらに、ITMはアイデンティティと呼ばれる1ビットの情報 <span class="arithmatex">\(\sigma \in \lbrace 0,1 \rbrace\)</span> を持ちます。スイッチテープの内容がアイデンティティ <span class="arithmatex">\(\sigma\)</span> と一致する場合、そのITMはアクティブ状態にあり、一致しない場合、そのITMはアイドル状態にあります。</p>
+<p>以下、入力テープの内容を入力、ランダムテープの内容をランダム入力、終了時の出力テープの内容を出力と呼びます。</p>
+<p>スイッチテープとアイデンティティについて説明します。まず、前提として対話型証明システムでは、2つの対話型Turingマシンが対話的に通信を行うことを考えます。対話的な通信を形式的に表現するために、片方のマシンがアクティブ状態にあり、もう片方のマシンがアイドル状態にある状況を作り出す必要があります。そのためにアイデンティティとスイッチテープがあります。片方のアイデンティティを <span class="arithmatex">\(0\)</span> 、もう片方のアイデンティティを <span class="arithmatex">\(1\)</span> とします。スイッチテープは2つのマシンが共有しています。スイッチテープの内容とアイデンティティが一致するマシンが処理を行い、メッセージを送り終わったらスイッチテープの内容を自分のアイデンティティからもう片方のアイデンティティに切り替えることで、もう片方のマシンが処理を開始します。これが交互に行われることで通信を表現します。片方のマシンが停止し、かつ、スイッチテープの内容がそのマシンのアイデンティティである場合、両方のマシンの出力が決定します。</p>
+<p>通信テープについて説明します。読み出し専用の通信テープはもう片方のマシンの書き込み専用の通信テープは同じテープです。自身の書き込み専用の通信テープに書き込むことで、相手のマシンにメッセージを送ることができます。</p>
+<p>通信テープとスイッチテープは両方のマシンで共有します。入力テープは、両方のマシンで共有する場合と共有せず個々のテープを持つ場合を考えることがありますが、このサブセクションでは入力テープを共有する場合を考えます。それ以外のテープは共有しません。</p>
+<p>ランダムテープは、無限のバイナリ列からランダムに選択されます。そのため、対話型Turingマシンは定義としては確率的Turingマシンではないものの、事実上確率的に動作します。</p>
+<h2 id="_2">対話型証明システムの定義</h2>
+<p>対話型証明システムを定義します。</p>
+<div class="admonition formal">
+<p class="admonition-title">対話型証明システム</p>
+<p>証明者と検証者のマシンをそれぞれ <span class="arithmatex">\(P,V\)</span> とし、マシン <span class="arithmatex">\(V\)</span> が多項式時間で動作して、以下で定義する完全性と健全性が成り立つなら、対話型マシンの組 <span class="arithmatex">\((P,V)\)</span> を言語 <span class="arithmatex">\(\mathcal{L}\)</span> の対話型証明システムという。</p>
+<p>各マシンのランダム入力（ランダムテープの内容）が一様かつ独立に選択されたとき、共通の入力 <span class="arithmatex">\(x\)</span> でマシン <span class="arithmatex">\(A\)</span> と通信するときの <span class="arithmatex">\(B\)</span> の出力を表す確率変数を <span class="arithmatex">\(\langle A,B \rangle (x)\)</span> と表記する。完全性と健全性は、次のように定義される。</p>
+<p><strong>完全性</strong>: 任意の文字列 <span class="arithmatex">\(w \in \mathcal{L}\)</span> に対して、次の式が成り立つ。</p>
+<div class="arithmatex">\[\operatorname{Pr}[\langle P,V \rangle (w) = 1 ] \ge \frac{2}{3}\]</div>
+<p><strong>健全性</strong>: 任意の文字列 <span class="arithmatex">\(w \in \mathcal{L}\)</span> と任意の対話型マシン <span class="arithmatex">\(P^*\)</span> に対して、次の式が成り立つ。</p>
+<div class="arithmatex">\[\operatorname{Pr}[\langle P^*,V \rangle (w)=1 ] \le \frac{1}{3}\]</div>
+</div>
+<p>共通の入力には証明したいステートメントが含まれます。</p>
+<p>確率 <span class="arithmatex">\(\frac{1}{3}\)</span> は誤り確率と呼ばれ、 <span class="arithmatex">\(0\)</span> 以上 <span class="arithmatex">\(\frac{1}{2}\)</span> 未満の数であれば任意です。 <span class="arithmatex">\(e_1,e_2\)</span> を <span class="arithmatex">\(0\)</span> 以上 <span class="arithmatex">\(\frac{1}{2}\)</span> 未満の適当な定数として、完全性と健全性の不等号の右辺をそれぞれ <span class="arithmatex">\(1 - e_1,\ e_2\)</span> にしても問題ありません。この誤り確率は <span class="arithmatex">\(\mathrm{BPP}\)</span> と同様に増幅補題により指数関数的に小さくできます。すなわち、完全性は <span class="arithmatex">\(\ge 1\)</span> に、健全性は <span class="arithmatex">\(\le 0\)</span> に近づけるということです。よって、完全性と健全性はともに統計的であり、統計的完全性と統計的健全性です。</p>
+<p>完全性においては、ある証明者のマシン <span class="arithmatex">\(P\)</span> を対象とするのに対し、健全性においては任意の証明者のマシン <span class="arithmatex">\(P^*\)</span> を対象としています。また、検証者のマシン <span class="arithmatex">\(V\)</span> は多項式時間で動作するのに対して、証明者のマシン <span class="arithmatex">\(P,P^*\)</span> には計算能力の制限はないことに注意してください。</p>
+<p>証明者あるいは検証者が1つのメッセージを送信することの単位を「ムーブ」（move）、1つの対話の単位を「ラウンド」（round）と呼びます。つまり、1ラウンドは、2ムーブになります。</p>
+<h2 id="_3">対話型証明の例: グラフ非同型性判定問題</h2>
+<p>対話型証明の例として「グラフ非同型性判定問題」（graph non-isomorphism problem）を題材とします。まず、グラフ <span class="arithmatex">\(G\)</span> と <span class="arithmatex">\(G'\)</span> があり、グラフ <span class="arithmatex">\(G\)</span> の頂点を並び替えてグラフ <span class="arithmatex">\(G'\)</span> に一致できるとき、グラフ <span class="arithmatex">\(G\)</span> と <span class="arithmatex">\(G'\)</span> は同型（isomorphic）であると言います。形式的には次のようになります。</p>
+<div class="admonition formal">
+<p class="admonition-title">グラフの同型</p>
+<p>グラフ <span class="arithmatex">\(G,G'\)</span> の頂点集合をそれぞれ <span class="arithmatex">\(V,V'\)</span> 、辺集合をそれぞれ <span class="arithmatex">\(E,E'\)</span> とする。ある全単射写像 <span class="arithmatex">\(f\)</span> が存在して、グラフ <span class="arithmatex">\(G\)</span> の任意の2頂点 <span class="arithmatex">\(u,v \in V\)</span> に対して、 <span class="arithmatex">\((u,v) \in E\)</span> ならば <span class="arithmatex">\((f(u),f(v))\in E'\)</span> であるとき、グラフ <span class="arithmatex">\(G\)</span> と <span class="arithmatex">\(G'\)</span> を同型であるという。</p>
+</div>
+<p>2つのグラフが与えられてそれらが同型であるかを判定する問題をグラフ同型性判定問題といいます。このグラフ同型性判定問題は、明らかにクラス <span class="arithmatex">\(\mathrm{NP}\)</span> に属しますが、まだ多項式時間アルゴリズムが見つかっておらず、クラス <span class="arithmatex">\(\mathrm{P}\)</span> に属するかがわかっていません。また、 <span class="arithmatex">\(\mathrm{NP}\)</span> 完全であることも証明されていません。</p>
+<p>グラフ同型性判定問題の補言語であるグラフ非同型性判定問題を考えます。グラフが非同型であることを示す簡単な証明を与える方法はまだ見つかっていないため、グラフ非同型性判定問題はクラス <span class="arithmatex">\(\mathrm{NP}\)</span> に属するかがわかっていません。しかし、証明者が2つのグラフ <span class="arithmatex">\(G,G'\)</span> が非同型であることを検証者に納得させる対話型証明システムを以下のように構成できます。</p>
+<p>まず、検証者はグラフ <span class="arithmatex">\(G,G'\)</span> からランダムに一つ選びます。その選んだグラフの頂点をランダムに並び替え、その並び替えたグラフを <span class="arithmatex">\(H\)</span> とします。検証者はグラフ <span class="arithmatex">\(H\)</span> を証明者に送り、グラフ <span class="arithmatex">\(H\)</span> がグラフ <span class="arithmatex">\(G,G'\)</span> のどちらかを尋ねます。もしグラフ <span class="arithmatex">\(G,G'\)</span> が非同型であるならば、証明者は必ず正しくこの質問に答えられますが、グラフ <span class="arithmatex">\(G,G'\)</span> が同型である場合、証明者にどれだけ計算能力があろうとも証明者は <span class="arithmatex">\(\frac{1}{2}\)</span> の確率で間違えてしまいます。よって、複数回この質問を繰り返すことで、検証者は2つのグラフが非同型であると納得できます。ただし、このプロトコルではグラフ同型であることを示すことはできません。</p>
+<h2 id="_4">対話型証明システムの計算複雑性クラス</h2>
+<p>計算複雑性クラス <span class="arithmatex">\(\mathrm{IP}\)</span> を、対話型証明システムを持つ全ての言語の集合として定義します。</p>
+<p><span class="arithmatex">\(\mathrm{NP}\)</span> の全ての言語は、(1) 証明者が検証者にステートメントとウィットネスを送り、(2) 検証者がそれを検証する、という流れの対話型証明システムを構成できます。なので、 <span class="arithmatex">\(\mathrm{NP}\)</span> を、</p>
+<ul>
+<li>証明者と検証者の両方が決定性を持ち、</li>
+<li>相互作用が証明者から検証者へ一方向的で、</li>
+<li>検証者が決して誤らない、</li>
+</ul>
+<p>という3つの性質を持つ対話型証明システムのクラスとして捉えることができます。よって、 <span class="arithmatex">\(\mathrm{NP} \subseteq \mathrm{IP}\)</span> が成り立ちます。また、 <span class="arithmatex">\(\mathrm{IP} = \mathrm{PSPACE}\)</span> であることが知られています。</p>
+<p>検証者の内部のコイントス（すなわち乱数）を公開しなければならないとする対話型証明システムを考えることができます。そのような対話型証明システムはパブリックコインであるといい、Arthur–Merlinプロトコルと呼ばれます。逆にコイントスを公開しない対話型証明システムはプライベートコインであるといいます。</p>
+<p>コイントスを公開するか否かを考える意義は、検証者が悪意ある証明者に対して、内部で使用する乱数を秘密にすれば、証明者が証明を偽造することを阻止できるかもしれない、というモチベーションからです。例えば、先程紹介したグラフ非同型性判定問題の対話型証明システムにおいて、検証者がグラフ <span class="arithmatex">\(G,G'\)</span> のどちらかを選びますが、これを秘密にしないと悪意ある証明者が100%の確率でグラフを当てることができてしまいます。このようなことから、直感的にはコイントスを秘密することで対話型証明システムを構築できる言語が多くなってもおかしくないと思えます。</p>
+<p>しかし、検証者が内部のコイントスを秘匿しても、対話型証明システムを構築できる言語の集合は全く変わらないことが証明されています。この事実について少し説明します。</p>
+<p>計算複雑性クラス <span class="arithmatex">\(\mathrm{AM}\)</span> を、検証者が最初に行動し、パブリックコインである、2ラウンドの対話型証明システムを持つ全ての言語の集合であるとします。また、<span class="arithmatex">\(\mathrm{AM}\)</span> のラウンドを <span class="arithmatex">\(k\)</span> に拡張した計算複雑性クラスを <span class="arithmatex">\(\operatorname{AM}[k]\)</span> とします。 <span class="arithmatex">\(k\)</span> は定数とは限らず、多項式にもなり得ます。定義より、次の式が成り立ちます。</p>
+<div class="arithmatex">\[ \operatorname{AM} = \mathrm{AM}[2] \]</div>
+<p><span class="arithmatex">\(\mathrm{IP}\)</span> に対してもラウンドを <span class="arithmatex">\(k\)</span> に限定した <span class="arithmatex">\(\operatorname{IP}[k]\)</span> を定義します。まず、 <span class="arithmatex">\(\operatorname{AM}[k]\)</span> は <span class="arithmatex">\(\operatorname{IP}[k]\)</span> をパブリックコインに限定しただけなので、任意の <span class="arithmatex">\(k\)</span> に対して次の関係が成り立ちます。</p>
+<div class="arithmatex">\[ \operatorname{AM}[k] \subseteq \operatorname{IP}[k] \]</div>
+<p>そして、任意の定数 <span class="arithmatex">\(k\)</span> に対して、次の関係が成り立つことが証明されています。</p>
+<div class="arithmatex">\[ \operatorname{IP}[k] = \operatorname{AM}[k+2] \]</div>
+<p>これは、対話型証明システムをプライベートコインにしたところで、それに対応する2ラウンド増やしたパブリックコインの対話型証明システムが存在することを意味しています。また、任意の定数 <span class="arithmatex">\(k&gt;2\)</span> に対して次の式が成り立つことが証明されています。</p>
+<div class="arithmatex">\[ \operatorname{AM}[k] = \operatorname{AM}[2] \]</div>
+<p>パブリックコインの対話型証明システムを構築できる全ての言語は2ラウンドで構築できるということです。以上より、次の式が成り立ちます。</p>
+<div class="arithmatex">\[\operatorname{IP}[k] = \mathrm{AM} \]</div>
+<p>結局、 <span class="arithmatex">\(\operatorname{IP}[k]\)</span> は <span class="arithmatex">\(\mathrm{AM}\)</span> に存在しない言語に対して対話型証明システムを構築できるわけではないので、プライベートコインにしたところで対応できる言語の種類の観点から見れば全く意味がないということです。もちろん実際の対話型証明システムでは、言語の種類だけでなく効率性など他の軸も存在するので、対応できる言語が変わらないからと言ってプライベートコインの必要性が無くなるわけではありません。</p>
+<p>慣習上の注意として、 <span class="arithmatex">\(\mathrm{AM}\)</span> は定義より定数ラウンドという条件が入る一方で、 <span class="arithmatex">\(\mathrm{IP}\)</span> は定数ラウンドだけでなく多項式ラウンドも考慮するため、 <span class="arithmatex">\(\mathrm{AM}\neq \mathrm{IP}\)</span> であり <span class="arithmatex">\(\mathrm{AM} \subseteq \mathrm{IP}\)</span> となることに注意してください。つまり、 <span class="arithmatex">\(\mathrm{AM} = \operatorname{AM}[2]\)</span> ですが、 <span class="arithmatex">\(\mathrm{IP}=\operatorname{IP}[\mathrm{poly}]\)</span> であるということです。なので、<span class="arithmatex">\(\operatorname{AM}[\mathrm{poly}] = \operatorname{IP}[\mathrm{poly}]\)</span> とは言えます。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../proof-system/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2.2. 証明システム" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                2.2. 証明システム
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../interactive-zkp/" class="md-footer__link md-footer__link--next" aria-label="Next: 2.4. 対話型ゼロ知識証明" rel="next">
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Next
+                </span>
+                2.4. 対話型ゼロ知識証明
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.indexes", "navigation.footer", "toc.integrate"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.18008817.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

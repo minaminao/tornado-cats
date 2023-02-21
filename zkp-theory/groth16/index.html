@@ -1,0 +1,1577 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash">
+      
+      
+      
+        <link rel="canonical" href="https://minaminao.github.io/tornado-cats/zkp-theory/groth16/">
+      
+      
+        <link rel="prev" href="../qap/">
+      
+      
+        <link rel="next" href="../../circuit/">
+      
+      <link rel="icon" href="../../images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>2.12. Groth16: QAPに対するzk-SNARK - Tornado Cats</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.03fa9ba6.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="2.12. Groth16: QAPに対するzk-SNARK - Tornado Cats" >
+      
+        <meta  property="og:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  property="og:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/zkp-theory/groth16.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://minaminao.github.io/tornado-cats/zkp-theory/groth16/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="2.12. Groth16: QAPに対するzk-SNARK - Tornado Cats" >
+      
+        <meta  name="twitter:description"  content="A book for learning zero-knowledge applications and decentralized mixing through the creation of a simple mixer protocol based on Tornado Cash" >
+      
+        <meta  name="twitter:image"  content="https://minaminao.github.io/tornado-cats/assets/images/social/zkp-theory/groth16.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#groth16-qapzk-snark" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tornado Cats" class="md-header__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tornado Cats
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2.12. Groth16: QAPに対するzk-SNARK
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tornado Cats" class="md-nav__button md-logo" aria-label="Tornado Cats" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M253.4 2.9C249.2 1 244.7 0 240 0s-9.2 1-13.4 2.9L38.3 82.8C16.3 92.1-.1 113.8 0 140c.5 99.2 41.3 280.7 213.6 363.2 16.7 8 36.1 8 52.8 0C438.7 420.7 479.5 239.2 480 140c.1-26.2-16.3-47.9-38.3-57.2L253.4 2.9zM144 154.4c0-5.8 4.7-10.4 10.4-10.4h.2c3.4 0 6.5 1.6 8.5 4.3l40 53.3c3 4 7.8 6.4 12.8 6.4h48c5 0 9.8-2.4 12.8-6.4l40-53.3c2-2.7 5.2-4.3 8.5-4.3h.2c5.8 0 10.4 4.7 10.4 10.4V272c0 53-43 96-96 96s-96-43-96-96V154.4zM200 288a16 16 0 1 0 0-32 16 16 0 1 0 0 32zm96-16a16 16 0 1 0-32 0 16 16 0 1 0 32 0z"/></svg>
+
+    </a>
+    Tornado Cats
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/minaminao/tornado-cats" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    minaminao/tornado-cats
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          1. イントロダクション
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          1. イントロダクション
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/introduction/" class="md-nav__link">
+        1.1. はじめに
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/tornado-cash-overview/" class="md-nav__link">
+        1.2. Tornado Cashの概要
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intro/zkp-overview/" class="md-nav__link">
+        1.3. ゼロ知識証明の概要
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">2. ゼロ知識証明の理論</a>
+          
+            <label for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          2. ゼロ知識証明の理論
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prerequisite/" class="md-nav__link">
+        2.1. 前提知識と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proof-system/" class="md-nav__link">
+        2.2. 証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interactive-proof-system/" class="md-nav__link">
+        2.3. 対話型証明システム
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interactive-zkp/" class="md-nav__link">
+        2.4. 対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zkp-for-np/" class="md-nav__link">
+        2.5. NPに対するゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proof-of-knowledge/" class="md-nav__link">
+        2.6. 知識の証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../argument/" class="md-nav__link">
+        2.7. アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nizk/" class="md-nav__link">
+        2.8. 非対話型ゼロ知識証明
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zk-nark/" class="md-nav__link">
+        2.9. 知識の非対話型ゼロ知識アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snarg/" class="md-nav__link">
+        2.10. 簡潔な非対話型アーギュメント
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qap/" class="md-nav__link">
+        2.11. Quadratic Arithmetic Program
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          2.12. Groth16: QAPに対するzk-SNARK
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        2.12. Groth16: QAPに対するzk-SNARK
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#groth16" class="md-nav__link">
+    Groth16の概要
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#groth16_1" class="md-nav__link">
+    Groth16の計算量
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    非対話型線形証明
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-iii" class="md-nav__link">
+    Type Ⅲペアリングを用いるための分割非対話型線形証明
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    ディスクロージャーフリー
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    非対話型線形証明から非対話型アーギュメントへの変換
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qap" class="md-nav__link">
+    QAPに対する非対話型線形証明
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#laurentschwartzzippel" class="md-nav__link">
+    多変数Laurent多項式に対するSchwartz–Zippelの補題
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    アフィン証明者戦略に対する統計的知識健全性の証明
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qapzk-snark" class="md-nav__link">
+    QAPに対するペアリングに基づくzk-SNARKへの変換
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../circuit/">3. ゼロ知識証明回路の基礎</a>
+          
+            <label for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          3. ゼロ知識証明回路の基礎
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/circom/" class="md-nav__link">
+        3.1. Circomとは
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/factorization/" class="md-nav__link">
+        3.2. 回路の例: 因数分解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/compile/" class="md-nav__link">
+        3.3. 回路のコンパイル
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/r1cs/" class="md-nav__link">
+        3.4. Rank 1 Constraint System
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/witness-computation/" class="md-nav__link">
+        3.5. ウィットネスの計算
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/setup-zkp/" class="md-nav__link">
+        3.6. ゼロ知識証明のセットアップ
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/generation-and-verification/" class="md-nav__link">
+        3.7. ゼロ知識証明の生成と検証
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../circuit/exercise/" class="md-nav__link">
+        3.8. 演習
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../mixer/">4. ミキサープロトコルの開発</a>
+          
+            <label for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          4. ミキサープロトコルの開発
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/design/" class="md-nav__link">
+        4.1. ミキサープロトコルの設計
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/preparation/" class="md-nav__link">
+        4.2. ミキサープロトコルの全体構成と準備
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/mixer-contract/" class="md-nav__link">
+        4.3. ミキサーコントラクトの実装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mixer/withdrawal-circuit/" class="md-nav__link">
+        4.4. 出金回路の実装
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../appendix/">5. 付録</a>
+          
+            <label for="__nav_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          5. 付録
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-decentralization/" class="md-nav__link">
+        5.1. Tornado Cashの非中央集権性
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-status/" class="md-nav__link">
+        5.2. Tornado Cashの稼働状況
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-contracts/" class="md-nav__link">
+        5.3. Tornado Cash Classicのコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-circuits/" class="md-nav__link">
+        5.4. Tornado Cash Classicのゼロ知識証明回路
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/tornado-cash-classic-ceremony/" class="md-nav__link">
+        5.5. Tornado Cash ClassicのTrusted Setup Ceremony
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/circomlib/" class="md-nav__link">
+        5.6. CircomLib
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendix/precompiled-contracts-for-zk/" class="md-nav__link">
+        5.7. zk-SNARK用のプリコンパイル済みコントラクト
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        6. 参考文献
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="groth16-qapzk-snark">Groth16: QAPに対するzk-SNARK</h1>
+<h2 id="groth16">Groth16の概要</h2>
+<p>Groth16は、NP完全問題である算術回路充足可能性問題に対するzk-SNARKです。アーギュメントは3つの群の元の組であり、定数サイズです。前の章で説明したように、算術回路充足可能性問題のステートメントを、QAPの形式で考えることで非常に効率的に動作します。</p>
+<p>Groth16はパーフェクト完全性とパーフェクトゼロ知識性を持ち、一般的な双線形群の演算を多項式回行う敵対者に対して、統計的知識健全性を持ちます。</p>
+<h2 id="groth16_1">Groth16の計算量</h2>
+<p>Groth16の空間計算量と時間計算量は次の表のようになります。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CRSサイズ</th>
+<th>証明サイズ</th>
+<th>証明者の計算量</th>
+<th>検証者の計算量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>論理回路充足可能性</td>
+<td><span class="arithmatex">\((3m+n)\mathbb{G}_1\)</span>, <span class="arithmatex">\(m\mathbb{G}_2\)</span></td>
+<td><span class="arithmatex">\(2\mathbb{G}_1\)</span>, <span class="arithmatex">\(1\mathbb{G_2}\)</span></td>
+<td><span class="arithmatex">\(nE_1\)</span></td>
+<td><span class="arithmatex">\(\ell M_1\)</span>, <span class="arithmatex">\(3P\)</span></td>
+</tr>
+<tr>
+<td>算術回路充足可能性（対称ペアリング）</td>
+<td><span class="arithmatex">\((m+2n)\mathbb{G}\)</span></td>
+<td><span class="arithmatex">\(3\mathbb{G}\)</span></td>
+<td><span class="arithmatex">\((m+3n-\ell)E\)</span></td>
+<td><span class="arithmatex">\(\ell E\)</span>, <span class="arithmatex">\(3P\)</span></td>
+</tr>
+<tr>
+<td><strong>算術回路充足可能性（非対称ペアリング）</strong></td>
+<td><span class="arithmatex">\((m+2n)\mathbb{G}_1\)</span>, <span class="arithmatex">\(n\mathbb{G}_2\)</span></td>
+<td><span class="arithmatex">\(2\mathbb{G}_1\)</span>, <span class="arithmatex">\(1\mathbb{G}_2\)</span></td>
+<td><span class="arithmatex">\((m+3n-\ell)E_1\)</span>, <span class="arithmatex">\(nE_2\)</span></td>
+<td><span class="arithmatex">\(\ell E_1\)</span>, <span class="arithmatex">\(3P\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>ここで、 <span class="arithmatex">\(\mathbb{G},\mathbb{G}_1,\mathbb{G}_2\)</span> はその群の元の個数の単位、 <span class="arithmatex">\(E,E_1,E_2\)</span> をその群での累乗の計算量、 <span class="arithmatex">\(M_1\)</span> は乗算の計算量、 <span class="arithmatex">\(P\)</span> はペアリングの計算量とし、論理回路充足可能性においては、 <span class="arithmatex">\(\ell\)</span> をステートメントのビット数、 <span class="arithmatex">\(m\)</span> をワイヤーの本数、 <span class="arithmatex">\(n\)</span> を2入力の論理ゲートの個数、とし、算術回路充足可能性においては、 <span class="arithmatex">\(\ell\)</span> をステートメントを表す元の個数、 <span class="arithmatex">\(m\)</span> をワイヤーの本数、 <span class="arithmatex">\(n\)</span> を乗算ゲートの個数、とします。注目すべきなのは、最後の行の「算術回路充足可能性（非対称ペアリング）」であり、通常「Groth16の計算量」といえばこの計算量を指します。</p>
+<h2 id="_1">非対話型線形証明</h2>
+<p>Groth16を構成するにあたって、非対話型線形証明（non-interactive linear proof; NILP）という概念が必要であるため説明します。非対話型線形証明システムとは、パーフェクト完全性とアフィン証明者戦略に対する統計的知識健全性（statistical knowledge soundness against affine prover strategies）を持つ非対話型証明システムのことです。非対話型線形証明について考える嬉しさは、非対話型線形証明からペアリングを用いた公開検証可能な前処理型SNARKに変換できることで、Groth16もそのように変換して構成します。</p>
+<p>アフィン証明者（affine prover）とは、簡単に言えば計算がアフィン関数（すなわち一次関数）に制限された証明者のことです。「アフィン」（affine）と意味が似た言葉に「線形」（linear）があります。文献によっては、アフィン関数（一次関数）を <span class="arithmatex">\(y=ax+b\)</span> で表せる形の関数とし、線形関数を <span class="arithmatex">\(y=ax\)</span> で表せる形の関数とすることがありますが、ここではアフィンと線形という言葉を特に区別せず、 <span class="arithmatex">\(y=ax+b\)</span> の形の関数を考えます。</p>
+<p>ではアフィン関数以外の計算を行う証明者について何も保証しないのかというとそうではなく、証明者がアフィン関数しか実行できなくなるような仕組みをプロトコルに導入できます。具体的には、Targeted Malleabilityという性質を満たすアフィン準同型演算のみを許すような暗号化方式を使用することで実現できますが、詳細は割愛します。</p>
+<div class="admonition formal">
+<p class="admonition-title">非対話型線形証明</p>
+<p>以下で定義する多項式時間アルゴリズムの組 <span class="arithmatex">\((\mathrm{Setup},\mathrm{Prove},\mathrm{Verify})\)</span> が、パーフェクト完全性とアフィン証明者戦略に対する統計的知識健全性を満たすとき、関係生成器 <span class="arithmatex">\(\mathcal{R}\)</span> の非対話型線形証明という。</p>
+</div>
+<p><strong>セットアップアルゴリズム</strong> <span class="arithmatex">\(\mathrm{Setup}\)</span> は、関係 <span class="arithmatex">\(R\)</span> を入力とし、関係 <span class="arithmatex">\(R\)</span> の共通参照文字列 <span class="arithmatex">\(\boldsymbol \sigma \in \mathbb{F}^m\)</span> とシミュレーショントラップドア <span class="arithmatex">\(\boldsymbol \tau \in \mathbb{F}^n\)</span> を出力する確率的多項式時間アルゴリズムです。 <span class="arithmatex">\(m,n\)</span> は適当な定数ですが、Groth16においては、 <span class="arithmatex">\(m\)</span> はワイヤーの本数となり、 <span class="arithmatex">\(n - 1\)</span> は多項式の次数となります。次の式で表せます。</p>
+<div class="arithmatex">\[(\boldsymbol\sigma,\boldsymbol\tau)\leftarrow \operatorname{Setup}(R)\]</div>
+<p><strong>証明アルゴリズム</strong> <span class="arithmatex">\(\mathrm{Prove}\)</span> は、関係 <span class="arithmatex">\(R\)</span> 、共通参照文字列 <span class="arithmatex">\(\boldsymbol \sigma\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> 、ウィットネス <span class="arithmatex">\(w\)</span> を入力とし、証明 <span class="arithmatex">\(\boldsymbol \pi\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ \boldsymbol \pi \leftarrow \operatorname{Prove}(R,\boldsymbol \sigma,\phi,w) \]</div>
+<p>アルゴリズム <span class="arithmatex">\(\mathrm{Prove}\)</span> は2段階で動作します。</p>
+<ol>
+<li>アルゴリズム <span class="arithmatex">\(\mathrm{ProofMatrix}\)</span> を、関係 <span class="arithmatex">\(R\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> 、ウィットネス <span class="arithmatex">\(w\)</span> を入力として、行列 <span class="arithmatex">\(\mathit \Pi \in \mathbb F^{k\times m}\)</span> を出力する確率的多項式時間アルゴリズムとします。 <span class="arithmatex">\(\mathit \Pi \leftarrow \operatorname{ProofMatrix}(R, \phi, w)\)</span> を実行します。</li>
+<li>証明 <span class="arithmatex">\(\boldsymbol \pi \coloneqq \mathit \Pi \boldsymbol \sigma\)</span> を計算します。 <span class="arithmatex">\(\mathit\Pi\)</span> が <span class="arithmatex">\(k\times m\)</span> の行列であり、 <span class="arithmatex">\(\boldsymbol \sigma\)</span> が <span class="arithmatex">\(m\)</span> 次のベクトルであるため、 <span class="arithmatex">\(\boldsymbol \pi \in \mathbb{F}^k\)</span> となります。</li>
+</ol>
+<p>アルゴリズム <span class="arithmatex">\(\mathrm{ProofMatrix}\)</span> も他のアルゴリズム <span class="arithmatex">\(\mathrm{Setup}\)</span> などと同様に入力と出力の形を定めただけに過ぎず、具体的な中身については定義していないことに注意してください。ここでは、証明が共通参照文字列に対する行列演算で計算されていること、すなわち、証明者の計算がアフィン関数に制限されていることが重要です。</p>
+<p><strong>検証アルゴリズム</strong> <span class="arithmatex">\(\mathrm{Verify}\)</span> は、関係 <span class="arithmatex">\(R\)</span> 、共通参照文字列 <span class="arithmatex">\(\boldsymbol \sigma\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> 、証明 <span class="arithmatex">\(\boldsymbol \pi\)</span> を入力として、却下を表す <span class="arithmatex">\(0\)</span> あるいは受理を表す <span class="arithmatex">\(1\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ 0/1 \leftarrow \operatorname{Verify}(R,\boldsymbol \sigma,\phi,\boldsymbol \pi) \]</div>
+<p>アルゴリズム <span class="arithmatex">\(\mathrm{Verify}\)</span> は2段階で動作します。</p>
+<ol>
+<li>アルゴリズム <span class="arithmatex">\(\mathrm{Test}\)</span> を、関係 <span class="arithmatex">\(R\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> を入力とし、総次数 <span class="arithmatex">\(d\)</span> の多変数多項式のベクトルの評価を行う算術回路 <span class="arithmatex">\(\boldsymbol t:\mathbb{F}^{m+k}\to \mathbb{F}^\eta\)</span> を出力する決定的多項式時間アルゴリズムとします。 <span class="arithmatex">\(\boldsymbol t \leftarrow \operatorname{Test}(R,\phi)\)</span> を実行します。</li>
+<li><span class="arithmatex">\(\boldsymbol t(\boldsymbol{\sigma}, \boldsymbol{\pi})=\mathbf{0}\)</span> である場合にのみ、証明を受理します。共通参照文字列 <span class="arithmatex">\(\boldsymbol\sigma\)</span> が次数 <span class="arithmatex">\(m\)</span> のベクトルであり、証明 <span class="arithmatex">\(\boldsymbol\pi\)</span> が次数 <span class="arithmatex">\(k\)</span> のベクトルであることから、算術回路 <span class="arithmatex">\(\boldsymbol t\)</span> の始域が <span class="arithmatex">\(\mathbb{F}^{m+k}\)</span> となっているわけです。</li>
+</ol>
+<p>アルゴリズムの定義は以上です。</p>
+<p>非対話型線形証明において、証明者が生成した行列 <span class="arithmatex">\(\mathit \Pi\)</span> からウィットネスを抽出できる場合、アフィン証明者戦略に対して知識健全性を持つと言います。形式的には次のように定義します。</p>
+<div class="admonition formal">
+<p class="admonition-title">アフィン証明者戦略に対する統計的知識健全性</p>
+<p>組 <span class="arithmatex">\((\mathrm{Setup},\mathrm{Prove},\mathrm{Verify})\)</span> が、ある非ブラックボックス型の多項式時間抽出機 <span class="arithmatex">\(\mathcal{X}\)</span> が存在して、任意の敵対者 <span class="arithmatex">\(\mathcal{A}\)</span> に対して、次の式を満たすとき、アフィン証明者戦略に対する統計的知識健全性があるという。</p>
+<div class="arithmatex">\[ \operatorname{Pr}\left[\begin{array}{c} (R, z) \leftarrow \mathcal{R}\left(1^\lambda\right) ;(\boldsymbol{\sigma}, \boldsymbol{\tau}) \leftarrow \operatorname{Setup}(R) ;(\phi, \mathit\Pi) \leftarrow \mathcal{A}(R, z) ; w \leftarrow \mathcal{X}(R, \phi, \mathit\Pi): \\
+\mathit\Pi \in \mathbb{F}^{m \times k} \wedge \operatorname{Verify}(R, \boldsymbol{\sigma}, \phi, \mathit\Pi \boldsymbol{\sigma})=\mathbf{0} \wedge(\phi, w) \notin R \end{array}\right] \approx 0 \]</div>
+</div>
+<h2 id="type-iii">Type Ⅲペアリングを用いるための分割非対話型線形証明</h2>
+<p>非対話型線形証明は、ペアリングを用いた公開検証可能な非対話型アーギュメントに変換できます。変換により、共通参照文字列 <span class="arithmatex">\(\boldsymbol \sigma\)</span> の要素はペアリングの双線形群の元にエンコードされ、証明者はそのエンコードされた元の線形結合として証明を計算することになります。</p>
+<p>ペアリングにType Ⅲペアリングを利用する場合、各元に対して、どちらの双線形群で演算を行うかを決める必要があります。これを形式化するために、共通参照文字列と証明を二つの部分に分割します。すなわち、 <span class="arithmatex">\(\boldsymbol \sigma = (\boldsymbol \sigma_1 , \boldsymbol \sigma_2),\ \boldsymbol \pi = (\boldsymbol \pi_1, \boldsymbol \pi_2)\)</span> とします。このように共通参照文字列と証明を分割できる非対話型線形証明を分割非対話型線形証明と呼ぶことにします。</p>
+<p>以下の形式になる非対話型線形証明を分割非対話型線形証明と定義します。</p>
+<p><strong>セットアップアルゴリズム</strong> <span class="arithmatex">\(\mathrm{Setup}\)</span> は、関係 <span class="arithmatex">\(R\)</span> を入力とし、関係 <span class="arithmatex">\(R\)</span> の共通参照文字列をベクトル <span class="arithmatex">\(\boldsymbol \sigma = (\boldsymbol \sigma_1, \boldsymbol \sigma_2)\in \mathbb F^{m_1}\times \mathbb F^{m_2}\)</span> とし、とシミュレーショントラップドア <span class="arithmatex">\(\boldsymbol \tau \in \mathbb{F}^n\)</span> を出力する確率的多項式時間アルゴリズムです。 <span class="arithmatex">\(m_1,m_2\)</span> は先程の非対話型線形証明の <span class="arithmatex">\(m\)</span> を用いて、 <span class="arithmatex">\(m_1+m_2 = m\)</span> を満たすような適当な定数です。</p>
+<div class="arithmatex">\[(\boldsymbol\sigma,\boldsymbol\tau)\leftarrow \operatorname{Setup}(R)\]</div>
+<p><strong>証明アルゴリズム</strong> <span class="arithmatex">\(\mathrm{Prove}\)</span> は、関係 <span class="arithmatex">\(R\)</span> 、共通参照文字列 <span class="arithmatex">\(\boldsymbol \sigma\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> 、ウィットネス <span class="arithmatex">\(w\)</span> を入力とし、証明 <span class="arithmatex">\(\boldsymbol \pi \coloneqq (\boldsymbol \pi_1, \boldsymbol \pi_2)\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ \boldsymbol \pi \leftarrow \operatorname{Prove}(R,\boldsymbol \sigma,\phi,w) \]</div>
+<p>アルゴリズム <span class="arithmatex">\(\mathrm{Prove}\)</span> は2段階で動作します。</p>
+<p>1. アルゴリズム <span class="arithmatex">\(\mathrm{ProofMatrix}\)</span> を、関係 <span class="arithmatex">\(R\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> 、ウィットネス <span class="arithmatex">\(w\)</span> を入力として、行列 <span class="arithmatex">\(\mathit \Pi \in \mathbb F^{k\times m}\)</span> を出力する確率的多項式時間アルゴリズムとします。ここで、 <span class="arithmatex">\(\mathit \Pi_1 \in \mathbb F^{k_1\times m_1},\ \mathit \Pi_2 \in \mathbb F^{k_2 \times m_2}\)</span> として、</p>
+<div class="arithmatex">\[\mathit \Pi = \begin{pmatrix} \mathit\Pi_1 &amp; 0 \\
+0 &amp; \mathit\Pi_2 \end{pmatrix}\]</div>
+<p>であるとします。 <span class="arithmatex">\(k_1,k_2\)</span> は先程の非対話型線形証明の <span class="arithmatex">\(k\)</span> を用いて <span class="arithmatex">\(k_1+k_2=k\)</span> を満たすような適当な定数です。 <span class="arithmatex">\(\mathit \Pi \leftarrow \operatorname{ProofMatrix}(R, \phi, w)\)</span> を実行します。</p>
+<p>2. <span class="arithmatex">\(\boldsymbol \pi_1 \coloneqq \mathit \Pi_1 \boldsymbol \sigma_1,\ \boldsymbol \pi_2 \coloneqq \mathit \Pi_2 \boldsymbol \sigma_2\)</span> を計算して、 <span class="arithmatex">\(\boldsymbol\pi = (\boldsymbol \pi_1, \boldsymbol \pi_2)\)</span> を返します。単に <span class="arithmatex">\(\mathit\Pi \boldsymbol\sigma\)</span> を計算すれば、</p>
+<div class="arithmatex">\[\mathit\Pi\boldsymbol\sigma = \begin{pmatrix} \mathit\Pi_1 &amp; 0 \\
+0 &amp; \mathit\Pi_2 \end{pmatrix} \begin{pmatrix} \boldsymbol\sigma_1 \\
+\boldsymbol\sigma_2 \end{pmatrix} = \begin{pmatrix} \pi_1 \\
+\pi_2 \end{pmatrix}\]</div>
+<p>となり求まります。</p>
+<p><strong>検証アルゴリズム</strong> <span class="arithmatex">\(\mathrm{Verify}\)</span> は、関係 <span class="arithmatex">\(R\)</span> 、共通参照文字列 <span class="arithmatex">\(\boldsymbol \sigma\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> 、証明 <span class="arithmatex">\(\boldsymbol \pi\)</span> を入力として、却下を表す <span class="arithmatex">\(0\)</span> あるいは受理を表す <span class="arithmatex">\(1\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ 0/1 \leftarrow \operatorname{Verify}(R,\boldsymbol \sigma,\phi,\boldsymbol \pi) \]</div>
+<p>アルゴリズム <span class="arithmatex">\(\mathrm{Verify}\)</span> は2段階で動作します。</p>
+<ol>
+<li>アルゴリズム <span class="arithmatex">\(\mathrm{Test}\)</span> を、関係 <span class="arithmatex">\(R\)</span> 、ステートメント <span class="arithmatex">\(\phi\)</span> を入力とし、総次数 <span class="arithmatex">\(d\)</span> の多変数多項式のベクトルの評価を行う算術回路 <span class="arithmatex">\(\boldsymbol t:\mathbb{F}^{m+k}\to \mathbb{F}^\eta\)</span> を出力する決定的多項式時間アルゴリズムとします。 <span class="arithmatex">\(\boldsymbol t \leftarrow \operatorname{Test}(R,\phi)\)</span> を実行します。ただし、この <span class="arithmatex">\(\boldsymbol t\)</span> は行列 <span class="arithmatex">\(T_1,\ldots,T_\eta \in \mathbb F^{(m_1+k_1)\times (m_2+k_2)}\)</span> に対応しているとします。</li>
+<li>全ての行列 <span class="arithmatex">\(T_1,\ldots,T_\eta\)</span> に対して、次の式が成り立つ場合に証明を受理します。</li>
+</ol>
+<div class="arithmatex">\[ \begin{pmatrix} \boldsymbol\sigma_1 \\
+\boldsymbol\pi_1 \end{pmatrix}\cdot T_i \begin{pmatrix} \boldsymbol\sigma_2 \\
+\boldsymbol\pi_2 \end{pmatrix} = 0 \]</div>
+<h2 id="_2">ディスクロージャーフリー</h2>
+<p>分割非対話型線形証明をType Ⅲペアリングの非対話型アーギュメントに変換するにあたって、「変換元の分割非対話型線形証明に健全性があるならば、変換後も健全性がある」と主張したいです。しかし、証明者が共通参照文字列を知り、その共通参照文字列から何かしらの不正に使える情報を学んで、行列 <span class="arithmatex">\(\mathit \Pi\)</span> を選択する可能性があります。こういった適応的な敵対者に対しても安全であることを証明しなければなりません。すなわち、<a href="../zk-nark/">適応性</a>が必要です。</p>
+<p>証明者がある共通参照文字列から何も有用な情報を得られないとき、その共通参照文字列をディスクロージャーフリー（disclosure-free）な共通参照文字列と言います。また、ディスクロージャーフリーな共通参照文字列を持つ分割非対話型線形証明を、ディスクロージャーフリーな分割非対話型線形証明と呼びます。形式的には次のように定義します。</p>
+<div class="admonition formal">
+<p class="admonition-title">ディスクロージャーフリーな共通参照文字列</p>
+<p>分割非対話型線形証明 <span class="arithmatex">\((\mathrm{Setup},\mathrm{Prove},\mathrm{Verify})\)</span> が次の式を満たすとき、その共通参照文字列はディスクロージャーフリーであるという。</p>
+<div class="arithmatex">\[ \operatorname{Pr}\left[ \begin{array}{c} (R, z) \leftarrow \mathcal{R}\left(1^\lambda\right) ; T \leftarrow \mathcal{A}(R, z) ;\left(\boldsymbol\sigma_1, \boldsymbol\sigma_2, \boldsymbol\tau\right),\left(\boldsymbol\sigma_1^{\prime}, \boldsymbol\sigma_2^{\prime}, \boldsymbol\tau^{\prime}\right) \leftarrow \operatorname{Setup}(R): \\
+\boldsymbol\sigma_1 \cdot T \boldsymbol\sigma_2=0 \text { if and only if } \boldsymbol\sigma_1^{\prime} \cdot T \boldsymbol\sigma_2^{\prime}=0 \end{array} \right] \approx 1 \]</div>
+</div>
+<h2 id="_3">非対話型線形証明から非対話型アーギュメントへの変換</h2>
+<p>ディスクロージャーフリーな分割非対話型線形証明 <span class="arithmatex">\((\mathrm{Setup},\mathrm{Prove},\mathrm{Verify},\mathrm{Sim})\)</span> からType Ⅲペアリングの非対話型アーギュメント <span class="arithmatex">\((\mathrm{Setup}',\mathrm{Prove}',\mathrm{Verify}',\mathrm{Sim}')\)</span> への変換を与えます。</p>
+<p><strong>セットアップアルゴリズム</strong> <span class="arithmatex">\((\sigma,\tau)\leftarrow \mathrm{Setup'}(R)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\((\boldsymbol\sigma_1,\boldsymbol\sigma_2,\boldsymbol\tau)\leftarrow \operatorname{Setup}(R)\)</span> </li>
+<li><span class="arithmatex">\(\sigma \coloneqq ([\boldsymbol\sigma_1]_1, [\boldsymbol\sigma_2]_2)\)</span></li>
+<li><span class="arithmatex">\(\tau \coloneqq \boldsymbol\tau\)</span> </li>
+</ul>
+<p><strong>証明アルゴリズム</strong> <span class="arithmatex">\(\pi \leftarrow \operatorname{Prove'}(R,\sigma,\phi,w)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\((\mathit\Pi_1,\mathit\Pi_2) \leftarrow \operatorname{ProofMatrix}(R,x,w)\)</span></li>
+<li><span class="arithmatex">\(\pi\coloneqq ([\boldsymbol\pi_1]_1, [\boldsymbol\pi_2]_2)\)</span> </li>
+<li>ここで <span class="arithmatex">\([\boldsymbol\pi_1]_1 = \mathit\Pi_1[\boldsymbol\sigma_1]_1 \quad [\boldsymbol\pi_2]_2 = \mathit\Pi_2[\boldsymbol\sigma_2]_2\)</span> です。</li>
+</ul>
+<p><strong>検証アルゴリズム</strong> <span class="arithmatex">\(0/1 \leftarrow \operatorname{Verify'}(R,\sigma,\phi,\pi)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\((T_1,\ldots,T_\eta)\leftarrow \operatorname{Test}(R,\phi)\)</span></li>
+<li>全ての <span class="arithmatex">\(T_1,\ldots,T_\eta\)</span> に対して次の式が成り立つ場合に限り、証明を受理します。</li>
+</ul>
+<div class="arithmatex">\[ \begin{bmatrix} \boldsymbol\sigma_1 \\ \boldsymbol\pi_1 \end{bmatrix}_1 \cdot T_i \begin{bmatrix} \boldsymbol\sigma_2 \\ \boldsymbol\pi_2 \end{bmatrix}_2 = [0]_T \]</div>
+<p><strong>シミュレーションアルゴリズム</strong> <span class="arithmatex">\(\pi\leftarrow\operatorname{Sim'}(R,\tau,\phi)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\((\boldsymbol\pi_1,\boldsymbol\pi_2)\leftarrow\operatorname{Sim}(R,\boldsymbol\tau,\phi)\)</span></li>
+<li><span class="arithmatex">\(\pi \coloneqq ([\boldsymbol\pi_1]_1, [\boldsymbol\pi_2]_2)\)</span></li>
+</ul>
+<p>上記のType Ⅲペアリングの非対話型アーギュメントは、パーフェクト完全性と多項式数の一般的な群演算しか行わない一般的な敵対者に対する統計的知識健全性を持ちます。また、変換元の分割非対話型線形証明がパーフェクトゼロ知識性を持つなら、変換後もパーフェクトゼロ知識性を持ちます。</p>
+<h2 id="qap">QAPに対する非対話型線形証明</h2>
+<p>次の式で定義されるQAP <span class="arithmatex">\(R\)</span> を出力するQAP生成器に対する非対話型線形証明 <span class="arithmatex">\((\mathrm{Setup},\mathrm{Prove},\mathrm{Verify})\)</span> を構成します。</p>
+<div class="arithmatex">\[ R \coloneqq \left( \mathbb{F} ,\mathrm{aux},\ell,\left\lbrace u_i(X), v_i(X), w_i(X)\right\rbrace_{i=0}^m, t(X) \right) \]</div>
+<p>この関係は、 <span class="arithmatex">\((a_1,\ldots,a_\ell)\in \mathbb F^\ell\)</span> をステートメントとし、 <span class="arithmatex">\((a_{\ell+1},\ldots,a_m)\in \mathbb F^{m-\ell}\)</span> をウィットネスとして、 <span class="arithmatex">\(a_0 = 1\)</span> かつ</p>
+<div class="arithmatex">\[ \sum_{i=0}^m a_i u_i(X) \cdot \sum_{i=0}^m a_i v_i(X)=\sum_{i=0}^m a_i w_i(X)+h(X) t(X) \]</div>
+<p>を満たす言語を定義します。 <span class="arithmatex">\(h(X)\)</span> は次数 <span class="arithmatex">\(n-2\)</span> の多項式で、 <span class="arithmatex">\(n\)</span> は <span class="arithmatex">\(t(X)\)</span> の次数です。このQAPの定義の詳細は、前の章の「QAPの形式化」に書いてある通りです。</p>
+<p><strong>セットアップアルゴリズム</strong> <span class="arithmatex">\((\boldsymbol\sigma,\boldsymbol\tau)\leftarrow \mathrm{Setup}(R)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\(\alpha, \beta, \gamma, \delta, x \leftarrow \mathbb{F}^*\)</span></li>
+<li><span class="arithmatex">\(\boldsymbol\tau\coloneqq(\alpha, \beta, \gamma, \delta, x)\)</span></li>
+<li><span class="arithmatex">\(\psi_i \coloneqq \beta u_i(x)+\alpha v_i(x) + w_i(x)\)</span></li>
+</ul>
+<div class="arithmatex">\[ \boldsymbol{\sigma}\coloneqq\left(\alpha, \beta, \gamma, \delta,\left\lbrace x^i\right\rbrace_{i=0}^{n-1},\left\lbrace\frac{\psi_i}{\gamma}\right\rbrace_{i=0}^{\ell},\left\lbrace\frac{\psi_i}{\delta}\right\rbrace_{i=\ell+1}^m,\left\lbrace\frac{x^i t(x)}{\delta}\right\rbrace_{i=0}^{n-2}\right) \]</div>
+<p>組の内部で集合を記述していますが、集合は展開され、集合の要素が組の要素になると考えてください。すなわち、組 <span class="arithmatex">\(\boldsymbol\sigma\)</span> の構成要素は以下になります。</p>
+<ul>
+<li><span class="arithmatex">\(\alpha,\beta,\gamma,\delta\)</span></li>
+<li><span class="arithmatex">\(x^0,x^1,\ldots,x^{n-1}\)</span></li>
+<li><span class="arithmatex">\(\frac{\psi_0}{\gamma},\frac{\psi_1}{\gamma},\ldots,\frac{\psi_\ell}{\gamma}\)</span></li>
+<li><span class="arithmatex">\(\frac{\psi_{\ell+1}}{\delta},\frac{\psi_{\ell+2}}{\delta},\ldots,\frac{\psi_m}{\delta}\)</span></li>
+<li><span class="arithmatex">\(\frac{x^0t(x)}{\delta},\frac{x^1t(x)}{\delta},\ldots,\frac{x^{n-2}t(x)}{\delta}\)</span></li>
+</ul>
+<p>よって、組 <span class="arithmatex">\(\boldsymbol\sigma\)</span> の次元は <span class="arithmatex">\(4+n+(m+1)+(n-1) = m+2n+4\)</span> になります。</p>
+<p><strong>証明アルゴリズム</strong> <span class="arithmatex">\(\pi \leftarrow \operatorname{Prove}(R,\boldsymbol\sigma,a_1,\ldots,a_m)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\(a_1,\ldots,a_m\)</span> の入力は、ステートメント <span class="arithmatex">\((a_1,\ldots,a_\ell)\)</span> とウィットネス <span class="arithmatex">\((a_{\ell+1},\ldots,a_m)\)</span> の入力を表しています。</li>
+<li><span class="arithmatex">\(r, s \leftarrow \mathbb{F}\)</span></li>
+<li><span class="arithmatex">\(3 \times(m+2n+4)\)</span> 行列 <span class="arithmatex">\(\mathit\Pi\)</span> を計算します。</li>
+<li>ここで、行列 <span class="arithmatex">\(\mathit\Pi\)</span> は、 <span class="arithmatex">\(\boldsymbol\pi\coloneqq\mathit\Pi \boldsymbol\sigma=(A, B, C)\)</span> かつ以下の式を満たすように構成します。</li>
+</ul>
+<div class="arithmatex">\[ \begin{align} A &amp;=\alpha+\sum_{i=0}^m a_i u_i(x)+r \delta \\
+B &amp;=\beta+\sum_{i=0}^m a_i v_i(x)+s \delta \\
+C &amp;=\frac{\displaystyle\sum_{i=\ell+1}^m a_i\left(\beta u_i(x)+\alpha v_i(x)+w_i(x)\right)+h(x) t(x)}{\delta}+A s+r B-r s \delta
+\end{align} \]</div>
+<p><strong>検証アルゴリズム</strong> <span class="arithmatex">\(0/1 \leftarrow \operatorname{Verify}(R,\boldsymbol\sigma,a_1,\ldots,a_\ell,\boldsymbol\pi)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\(\boldsymbol t(\boldsymbol \sigma, \boldsymbol \pi)=0\)</span> が次のテストに対応するような、2次多変量多項式 <span class="arithmatex">\(\boldsymbol t\)</span> を計算します。</li>
+</ul>
+<div class="arithmatex">\[ A \cdot B=\alpha \cdot \beta+\frac{\displaystyle\sum_{i=0}^{\ell} a_i\left(\beta u_i(x)+\alpha v_i(x)+w_i(x)\right)}{\gamma} \cdot \gamma+C \cdot \delta \]</div>
+<ul>
+<li>テストに合格すれば、証明を受理します。</li>
+</ul>
+<p><strong>シミュレーションアルゴリズム</strong> <span class="arithmatex">\(\boldsymbol\pi\leftarrow\operatorname{Sim}(R,\boldsymbol\tau,a_1,\ldots,a_\ell)\)</span> の構成:</p>
+<ul>
+<li><span class="arithmatex">\(A,B\leftarrow \mathbb{F}\)</span></li>
+<li><span class="arithmatex">\(C\coloneqq\frac{AB - \alpha\beta - \displaystyle\sum_{i=0}^{\ell} a_i\left(\beta u_i(x)+\alpha v_i(x)+w_i(x)\right)}{\delta}\)</span></li>
+<li><span class="arithmatex">\(\boldsymbol{\pi}\coloneqq(A, B, C)\)</span> を返します。</li>
+</ul>
+<p>上記のプロトコルは、パーフェクト完全性、パーフェクトゼロ知識性、アフィン証明者戦略に対して統計的知識健全性を持つ非対話型線形証明になります。</p>
+<p>証明としては、まずパーフェクト完全性については、実際に <span class="arithmatex">\(A\cdot B\)</span> を計算して検証式の右辺に一致することを確認すれば良いです。パーフェクトゼロ知識性は、証明が <span class="arithmatex">\(r,s\)</span> でランダム化されていることからわかります。アフィン証明者戦略に対する統計的知識健全性については長くなるのでセクションを分けて証明します。</p>
+<h2 id="laurentschwartzzippel">多変数Laurent多項式に対するSchwartz–Zippelの補題</h2>
+<p>アフィン証明者戦略に対する統計的知識健全性を証明するために、Schwartz–Zippelの補題が必要なので先に説明します。</p>
+<div class="admonition formal">
+<p class="admonition-title">Schwartz–Zippelの補題</p>
+<p><span class="arithmatex">\(\mathbb F\)</span> を体として、 <span class="arithmatex">\(p(x_1,\ldots,x_n)\)</span> を変数 <span class="arithmatex">\(x_1,\ldots,x_n \in \mathbb{F}\)</span> とした <span class="arithmatex">\(\mathbb F\)</span> 上の多変数多項式とする。 <span class="arithmatex">\(p(x_1,\ldots,x_n)\neq 0\)</span> であり（すなわち、常に <span class="arithmatex">\(0\)</span> ではないが <span class="arithmatex">\(0\)</span> になることもある多項式であるということ）、 <span class="arithmatex">\(p\)</span> の総次数が <span class="arithmatex">\(d\)</span> であるとき、任意の <span class="arithmatex">\(\mathbb{F}\)</span> の部分集合 <span class="arithmatex">\(S\)</span> に対して、 <span class="arithmatex">\(r_1,\ldots,r_n\)</span> を <span class="arithmatex">\(S\)</span> から一様ランダムに選択したならば、 <span class="arithmatex">\(\operatorname{Pr}[p(r_1,\ldots,r_n)=0]\le \frac{d}{|S|}\)</span> となる。</p>
+</div>
+<p>証明は割愛します。このSchwartz–Zippelの補題は、多変数Laurent多項式に適用できるように拡張できます。Laurent多項式とは、多項式の次数が負の項を含む多項式のことです。多項式はLaurent多項式ですが、Laurent多項式は多項式ではありません。Laurent多項式は、形式的には、<span class="arithmatex">\(x\)</span> を変数とし、<span class="arithmatex">\(n,m\)</span> を <span class="arithmatex">\(N\)</span> を非負整数とし、 <span class="arithmatex">\(a_i\)</span> を定数として、<span class="arithmatex">\(\displaystyle\sum_{i=-m}^n a_i x^i\)</span> と表せます。</p>
+<h2 id="_4">アフィン証明者戦略に対する統計的知識健全性の証明</h2>
+<p>アフィン証明者は、計算がアフィン関数に制限されているため、 <span class="arithmatex">\(A,B,C\)</span> は共通参照文字列の要素の線形結合になります。よって、 <span class="arithmatex">\(A_\alpha,A_\beta,A_\gamma,A_\delta,A_i\)</span> を定数、 <span class="arithmatex">\(A(x)\)</span> を <span class="arithmatex">\(n-1\)</span> 次の多項式、 <span class="arithmatex">\(A_h(x)\)</span> を <span class="arithmatex">\(n-2\)</span> 次の多項式として、 <span class="arithmatex">\(A\)</span> を次の式で表せます。</p>
+<div class="arithmatex">\[ A= A_\alpha \alpha + A_\beta \beta + A_\gamma \gamma + A_\delta \delta + A(x) + \sum_{i=0}^\ell A_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m A_i \frac{\psi_i}{\delta} + A_h(x) \frac{t(x)}{\delta} \]</div>
+<p><span class="arithmatex">\(B,C\)</span> も同様に次の式で表せます。</p>
+<div class="arithmatex">\[ \begin{align} 
+B &amp;= B_\alpha \alpha + B_\beta \beta + B_\gamma \gamma + B_\delta \delta + B(x) + \sum_{i=0}^\ell B_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m B_i \frac{\psi_i}{\delta} + B_h(x) \frac{t(x)}{\delta} \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m C_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta}
+\end{align} \]</div>
+<p>検証式は次の式だと前に定義しました。</p>
+<div class="arithmatex">\[ A \cdot B=\alpha \cdot \beta+\frac{\displaystyle\sum_{i=0}^{\ell} a_i\left(\beta u_i(x)+\alpha v_i(x)+w_i(x)\right)}{\gamma} \cdot \gamma+C \cdot \delta \]</div>
+<p>この検証式を <span class="arithmatex">\(A,B,C\)</span> の表記と統一するために <span class="arithmatex">\(\cdot\)</span> を省略して <span class="arithmatex">\(\psi_i\)</span> を利用し、 <span class="arithmatex">\(\gamma\)</span> を約分して消去すると、次の式になります。以下、検証式と言った場合、次の方程式を指します。</p>
+<div class="arithmatex">\[ AB=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \]</div>
+<p><span class="arithmatex">\(A,B,C\)</span> を不定元 <span class="arithmatex">\(\alpha,\beta,\gamma,\delta,x\)</span> の多変数Laurent多項式として見て、検証式を多変数Laurent多項式の方程式として見たとき、拡張したSchwartz–Zippelの補題により検証式が成り立たないならば、ウィットネスを知らない証明者が証明を生成できる確率はごくわずかになります。</p>
+<p>任意のステートメントとそれに対応するウィットネスに対して、検証式が恒等的に成り立つための各係数の条件を見ていきます。検証式は多変数Laurent多項式であるので、同類項でまとめた各係数が両辺で一致しなければなりません。つまり、以下の連立方程式を解いていきます。</p>
+<div class="arithmatex">\[ \begin{align}
+AB &amp;=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \\
+A &amp;= A_\alpha \alpha + A_\beta \beta + A_\gamma \gamma + A_\delta \delta + A(x) + \sum_{i=0}^\ell A_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m A_i \frac{\psi_i}{\delta} + A_h(x) \frac{t(x)}{\delta} \\
+B &amp;= B_\alpha \alpha + B_\beta \beta + B_\gamma \gamma + B_\delta \delta + B(x) + \sum_{i=0}^\ell B_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m B_i \frac{\psi_i}{\delta} + B_h(x) \frac{t(x)}{\delta} \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m C_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta} 
+\end{align}\]</div>
+<p>まず、検証式の <span class="arithmatex">\(\alpha^2\)</span> の項を見ると 恒等的に <span class="arithmatex">\(A_\alpha B_\alpha \alpha^2=0\)</span> にならなければなりません。この式を満たすためには、 <span class="arithmatex">\(A_\alpha B_\alpha = 0\)</span> でなくてはならず、 <span class="arithmatex">\(A_\alpha=0\)</span> あるいは <span class="arithmatex">\(B_\alpha=0\)</span> となります。  <span class="arithmatex">\(AB=BA\)</span> であり対称性があるので、 <span class="arithmatex">\(A_\alpha,B_\alpha\)</span> のどちらかを <span class="arithmatex">\(0\)</span> として決めても一般性を損なうことはありません。そこで、 <span class="arithmatex">\(B_\alpha=0\)</span> とします。</p>
+<p>同様に様々な項を見ていきます。 <span class="arithmatex">\(\alpha\beta\)</span> の項を見ると、 <span class="arithmatex">\(A_\alpha B_\beta + A_\beta B_\alpha = 1\)</span> でなくてはなりません。 <span class="arithmatex">\(B_\alpha = 0\)</span> と決めたので、 <span class="arithmatex">\(A_\alpha B_\beta = 1\)</span> となります。ここで、 <span class="arithmatex">\(A_\alpha = B_\beta = 1\)</span> となるように、 <span class="arithmatex">\(A,B\)</span> をスケールさせても問題ありません。スケールとは <span class="arithmatex">\(A\)</span> の係数を <span class="arithmatex">\(\frac{1}{A_\alpha}\)</span> 倍にし、 <span class="arithmatex">\(B\)</span> の係数を <span class="arithmatex">\(\frac{1}{B_\beta}\)</span> 倍にするということです。</p>
+<p><span class="arithmatex">\(\beta^2\)</span> の項を見ると、 <span class="arithmatex">\(A_\beta B_\beta = 0\)</span> でなくてはなりませんが、 <span class="arithmatex">\(B_\beta =1\)</span> なので <span class="arithmatex">\(A_\beta=0\)</span> となります。以上より、現時点で連立方程式は次のようになります。</p>
+<div class="arithmatex">\[ \begin{align}
+AB &amp;=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \\
+A &amp;= \alpha + A_\gamma \gamma + A_\delta \delta + A(x) + \sum_{i=0}^\ell A_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m A_i \frac{\psi_i}{\delta} + A_h(x) \frac{t(x)}{\delta} \\
+B &amp;= \beta + B_\gamma \gamma + B_\delta \delta + B(x) + \sum_{i=0}^\ell B_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m B_i \frac{\psi_i}{\delta} + B_h(x) \frac{t(x)}{\delta} \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m C_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta} 
+\end{align}\]</div>
+<p>さらに係数の条件を確定させていきましょう。 <span class="arithmatex">\(\frac{1}{\delta^2}\)</span> の項を見ると次の等式が恒等的に成り立たなければなりません。 <span class="arithmatex">\(\delta\)</span> と <span class="arithmatex">\(\alpha,\beta,x\)</span> は独立なので <span class="arithmatex">\(\alpha,\beta,x\)</span> は定数としてみなしています。</p>
+<div class="arithmatex">\[ \left( \sum_{i=\ell+1}^m A_i\psi_i + A_h(x) t(x) \right) \left( \sum_{i=\ell+1}^m B_i \psi_i + B_h(x) t(x) \right) = 0 \]</div>
+<p>括弧で括られた項のどちらかが <span class="arithmatex">\(0\)</span> にならなくてはなりません。対称性により、どちらかを <span class="arithmatex">\(0\)</span> として決めても一般性を損なうことはないので、 <span class="arithmatex">\(\displaystyle\sum_{i=\ell+1}^m B_i \psi_i + B_h(x) t(x) = 0\)</span> とします。</p>
+<p><span class="arithmatex">\(\frac{1}{\gamma^2}\)</span> の項を見ると次の等式が恒等的に成り立たなければなりません。 <span class="arithmatex">\(\gamma\)</span> と <span class="arithmatex">\(\alpha,\beta,x\)</span> は独立なので <span class="arithmatex">\(\alpha,\beta,x\)</span> は定数としてみなしています。</p>
+<div class="arithmatex">\[ \left( \sum_{i=0}^\ell A_i\psi_i \right) \left( \sum_{i=0}^\ell B_i \psi_i \right) = 0 \]</div>
+<p>これも括弧で括られた項のどちらかが <span class="arithmatex">\(0\)</span> にならなくてはならず、対称性により、どちらかを <span class="arithmatex">\(0\)</span> として決めても一般性を損なわないので、 <span class="arithmatex">\(\displaystyle\sum_{i=0}^\ell A_i\psi_i = 0\)</span> とします。 これで現時点で連立方程式は次のようになります。</p>
+<div class="arithmatex">\[ \begin{align}
+AB &amp;=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \\
+A &amp;= \alpha + A_\gamma \gamma + A_\delta \delta + A(x) + \sum_{i=\ell+1}^m A_i \frac{\psi_i}{\delta} + A_h(x) \frac{t(x)}{\delta} \\
+B &amp;= \beta + B_\gamma \gamma + B_\delta \delta + B(x) + \sum_{i=0}^\ell B_i \frac{\psi_i}{\gamma} \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m C_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta} 
+\end{align}\]</div>
+<p><span class="arithmatex">\(\frac{1}{\delta}\)</span> の係数の条件を、<span class="arithmatex">\(\alpha,\beta,\gamma,x\)</span> を定数として見ると、</p>
+<div class="arithmatex">\[ \left(\sum_{i=\ell+1}^m A_i \psi_i + A_h(x) t(x)\right)\left(\beta + B_\gamma \gamma + B(x) + \sum_{i=0}^\ell B_i \frac{\psi_i}{\gamma} \right) = 0 \]</div>
+<p>とならなければなりませんが、今までの議論と異なり左右の項で対称性がありません。さらに、右の項には変数である <span class="arithmatex">\(\beta\)</span> が含まれており、右の項に含まれる <span class="arithmatex">\(\displaystyle B_\gamma\gamma,B(x),\sum_{i=0}^\ell B_i \frac{\psi_i}{\gamma}\)</span> は <span class="arithmatex">\(\beta\)</span> とは独立です。そのため右の項が恒等的に <span class="arithmatex">\(0\)</span> になることはありません。任意の <span class="arithmatex">\(0\)</span> になるような変数の値の割当に対して、 <span class="arithmatex">\(\beta\)</span> を <span class="arithmatex">\(+1\)</span> したら <span class="arithmatex">\(0\)</span> でなくなります。よって、 <span class="arithmatex">\(\displaystyle\sum_{i=\ell+1}^m A_i \psi_i + A_h(x) t(x) = 0\)</span> となります。 </p>
+<p>同様に <span class="arithmatex">\(\frac{1}{\gamma}\)</span> の係数の条件を、<span class="arithmatex">\(\alpha,\beta,x\)</span> を定数として <span class="arithmatex">\(\delta\)</span> を変数として見ます。 <span class="arithmatex">\(\displaystyle\sum_{i=\ell+1}^m A_i \psi_i + A_h(x) t(x) = 0\)</span> を踏まえると、</p>
+<div class="arithmatex">\[ \left(\sum_{i=0}^\ell B_i \psi_i\right)\left( \alpha + A_\delta \delta + A(x)\right) = 0\]</div>
+<p>が成り立たなくてはなりませんが、右の項に <span class="arithmatex">\(\alpha\)</span> があるため <span class="arithmatex">\(\displaystyle\sum_{i=0}^\ell B_i \psi_i = 0\)</span> となります。ここで <span class="arithmatex">\(\delta\)</span> は変数として見ているので、検証式の右辺の <span class="arithmatex">\(\displaystyle\sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma}\delta\)</span> は係数に含まれないことに注意してください。以上より、現時点で連立方程式は次のようになります。</p>
+<div class="arithmatex">\[ \begin{align}
+AB &amp;=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \\
+A &amp;= \alpha + A_\gamma \gamma + A_\delta \delta + A(x) \\
+B &amp;= \beta + B_\gamma \gamma + B_\delta \delta + B(x) \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m C_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta} 
+\end{align}\]</div>
+<p><span class="arithmatex">\(\beta\gamma\)</span> の項を見ると <span class="arithmatex">\(A_\gamma \beta \gamma = 0\)</span> より <span class="arithmatex">\(A_\gamma = 0\)</span> となります。また、 <span class="arithmatex">\(\alpha\gamma\)</span> の項を見ると <span class="arithmatex">\(B_\gamma \alpha \gamma = 0\)</span> より <span class="arithmatex">\(B_\gamma = 0\)</span> となります。これで、現時点の連立方程式は次のようになります。</p>
+<div class="arithmatex">\[ \begin{align}
+AB &amp;=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \\
+A &amp;= \alpha + A_\delta \delta + A(x) \\
+B &amp;= \beta + B_\delta \delta + B(x) \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell C_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m C_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta} 
+\end{align}\]</div>
+<p><span class="arithmatex">\(\alpha\)</span> の係数の条件を <span class="arithmatex">\(x\)</span> を定数として見ると、</p>
+<div class="arithmatex">\[ B(x) = \sum_{i=0}^\ell a_i v_i(x) + \sum_{i=\ell+1}^m C_i v_i(x) \]</div>
+<p>となり、 <span class="arithmatex">\(\beta\)</span> の係数の条件を <span class="arithmatex">\(x\)</span> を定数としてみると、</p>
+<div class="arithmatex">\[ A(x) = \sum_{i=0}^\ell a_iu_i(x) + \sum_{i=\ell+1}^m C_i u_i(x) \]</div>
+<p>となります。 <span class="arithmatex">\(i=\ell+1,\ldots,m\)</span> に対して <span class="arithmatex">\(a_i \coloneqq C_i\)</span> とすると、</p>
+<div class="arithmatex">\[ \begin{align}
+A(x) &amp;= \sum_{i=0}^m a_iu_i(x) \\
+B(x) &amp;= \sum_{i=0}^m a_i v_i(x)
+\end{align} \]</div>
+<p>となります。これで、現時点の連立方程式は次のようになります。</p>
+<div class="arithmatex">\[ \begin{align}
+AB &amp;=\alpha\beta+\sum_{i=0}^{\ell} a_i\psi_i+C\delta \\
+A &amp;= \alpha + A_\delta \delta + \sum_{i=0}^m a_iu_i(x) \\
+B &amp;= \beta + B_\delta \delta + \sum_{i=0}^m a_iv_i(x) \\
+C &amp;= C_\alpha \alpha + C_\beta \beta + C_\gamma \gamma + C_\delta \delta + C(x) + \sum_{i=0}^\ell a_i \frac{\psi_i}{\gamma} + \sum_{i=\ell+1}^m a_i \frac{\psi_i}{\delta} + C_h(x) \frac{t(x)}{\delta} 
+\end{align}\]</div>
+<p>最後に、<span class="arithmatex">\(1,x,x^2,\ldots\)</span> の項をまとめて係数を見てみます。右辺は <span class="arithmatex">\(C\delta\)</span> の計算によって、<span class="arithmatex">\(C\)</span> の項のうち <span class="arithmatex">\(\frac{1}{\delta}\)</span> を含まない項は全て無視できます。次の式が成り立たなければなりません。</p>
+<div class="arithmatex">\[ \left( \sum_{i=0}^m a_iu_i(x) \right) \left(\sum_{i=0}^m a_iv_i(x)\right) = \sum_{i=0}^m a_iw_i(x) + C_h(x)t(x) \]</div>
+<p>したがって、組 <span class="arithmatex">\((a_{\ell+1},\ldots,a_m) = (C_{\ell+1},\ldots,C_m)\)</span> がステートメント <span class="arithmatex">\((a_1,\ldots,a_\ell)\)</span> に対するウィットネスになっています。つまり、 <span class="arithmatex">\(a_i\coloneqq C_i\)</span> と定義しましたが、証明者は <span class="arithmatex">\(C_i\)</span> を <span class="arithmatex">\(a_i\)</span> にしないと正しい証明を生成できない、すなわち、ウィットネスを知らないと正しい証明を生成できないということです。知識抽出機は非ブラックボックス型であり、内部状態に完全にアクセスできるので、このウィットネスを抽出できます。よって、アフィン証明者戦略に対する統計的知識健全性を示すことができました。</p>
+<h2 id="qapzk-snark">QAPに対するペアリングに基づくzk-SNARKへの変換</h2>
+<p>Groth16で定義されている、QAPに対するペアリングに基づくzk-SNARK <span class="arithmatex">\((\mathrm{Setup}, \mathrm{Prove}, \mathrm{Verify}, \mathrm{Sim})\)</span> を説明します。このプロトコルを単にGroth16と呼びます。ゼロ知識性はパーフェクトゼロ知識性です。</p>
+<p>次の形の関係を返す関係生成器 <span class="arithmatex">\(\mathcal{R}\)</span> を考えます。</p>
+<div class="arithmatex">\[ R=\left(p, \mathbb{G}_1, \mathbb{G}_2, \mathbb{G}_T, e, g, h, \ell,\left\lbrace u_i(X), v_i(X), w_i(X)\right\rbrace_{i=0}^m, t(X)\right) \]</div>
+<p>ここで、 <span class="arithmatex">\(|p|=\lambda\)</span> です。この関係は、集合 <span class="arithmatex">\(\mathbb Z_p \coloneqq \{0,1,\ldots,p-1\}\)</span> による体とステートメント <span class="arithmatex">\((a_1,\ldots,a_\ell)\in \mathbb Z_p^\ell\)</span> とウィットネス <span class="arithmatex">\((a_{\ell+1},\ldots,a_m) \in \mathbb Z_p^{m-\ell}\)</span> の言語で、次の式を満たすものを定義します。ただし、 <span class="arithmatex">\(h(X)\)</span> を次数 <span class="arithmatex">\(n-2\)</span> の多項式で、 <span class="arithmatex">\(a_0=1\)</span> とします。</p>
+<div class="arithmatex">\[ \sum_{i=0}^m a_i u_i(X) \cdot \sum_{i=0}^m a_i v_i(X)=\sum_{i=0}^m a_i w_i(X)+h(X) t(X) \]</div>
+<p>先述した非対話型線形証明は、分割非対話型線形証明にできますし、ディスクロージャーフリーであるので、一般群モデルの非対話型ゼロ知識アーギュメントに変換できます。双線形群において、 <span class="arithmatex">\(\mathbb{G}_1\)</span> のほうが <span class="arithmatex">\(\mathbb G_2\)</span> よりも元のサイズが小さいので、<span class="arithmatex">\(A,C\)</span> を <span class="arithmatex">\(\mathbb{G}_1\)</span> に、 <span class="arithmatex">\(B\)</span> を <span class="arithmatex">\(\mathbb{G}_2\)</span> に割り当てます。以上により、以下の非対話型ゼロ知識アーギュメントが得られます。</p>
+<p><strong>セットアップアルゴリズム</strong> <span class="arithmatex">\(\mathrm{Setup}\)</span> は、関係 <span class="arithmatex">\(R\)</span> を入力とし、関係 <span class="arithmatex">\(R\)</span> の共通参照文字列 <span class="arithmatex">\(\sigma\)</span> とシミュレーショントラップドア <span class="arithmatex">\(\tau\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ (\sigma, \tau) \leftarrow \operatorname{Setup}(R) \]</div>
+<p>具体的なアルゴリズムを説明します。素数 <span class="arithmatex">\(p\)</span> を法として <span class="arithmatex">\(1\)</span> 以上 <span class="arithmatex">\(p-1\)</span> 以下の整数から成る乗法群を <span class="arithmatex">\(\mathbb Z_p^*\)</span> とします。 <span class="arithmatex">\(\mathbb Z_p^*\)</span> から5つの元 <span class="arithmatex">\(\alpha, \beta, \gamma, \delta, x\)</span> を選びます。次の式で表せます。</p>
+<div class="arithmatex">\[  \alpha, \beta, \gamma, \delta, x \leftarrow \mathbb Z_p^* \]</div>
+<p>この5つの元の組 <span class="arithmatex">\((\alpha, \beta, \gamma, \delta, x)\)</span> をシミュレーショントラップドア <span class="arithmatex">\(\tau\)</span> とします。</p>
+<div class="arithmatex">\[ \tau\coloneqq(\alpha, \beta, \gamma, \delta, x) \]</div>
+<p>次に、共通参照文字列 <span class="arithmatex">\(\sigma\)</span> を組 <span class="arithmatex">\(([\boldsymbol{\sigma}_1]_1, [\boldsymbol{\sigma}_2]_2)\)</span> とします。</p>
+<div class="arithmatex">\[ \sigma \coloneqq ([\boldsymbol{\sigma}_1]_1,[\boldsymbol{\sigma}_2]_2) \]</div>
+<p>ここで、 <span class="arithmatex">\(\boldsymbol{\sigma}_1,\boldsymbol{\sigma_2}\)</span> はそれぞれ次の式で定義する組とします。</p>
+<div class="arithmatex">\[ \boldsymbol{\sigma}_1\coloneqq\left(\begin{array}{c} \alpha, \beta, \delta,\left\lbrace x^i\right\rbrace_{i=0}^{n-1},\left\lbrace \frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}\right\rbrace_{i=0}^{\ell} , \left\lbrace\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\delta}\right\rbrace_{i=\ell+1}^m,\left\lbrace\frac{x^i t(x)}{\delta}\right\rbrace_{i=0}^{n=2} \end{array}\right) \]</div>
+<div class="arithmatex">\[ \boldsymbol{\sigma}_2\coloneqq\left(\beta, \gamma, \delta,\left\lbrace x^i\right\rbrace_{i=0}^{n-1}\right) \]</div>
+<p><strong>証明アルゴリズム</strong> <span class="arithmatex">\(\mathrm{Prove}\)</span> は、関係 <span class="arithmatex">\(R\)</span> 、共通参照文字列 <span class="arithmatex">\(\sigma\)</span> 、ステートメントワイヤーとウィットネスワイヤーからなる <span class="arithmatex">\(a_1,\ldots,a_m\)</span> を入力とし、アーギュメント <span class="arithmatex">\(\pi\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ \pi \leftarrow \operatorname{Prove}(R, \sigma, a_1, \ldots, a_m) \]</div>
+<p>具体的なアルゴリズムを説明します。まず、 $\mathbb Z_p $ から <span class="arithmatex">\(r,s\)</span> を選びます。</p>
+<div class="arithmatex">\[ r,s \leftarrow \mathbb Z_p \]</div>
+<p>次に、アーギュメント <span class="arithmatex">\(\pi\)</span> を組 <span class="arithmatex">\(([A]_1,[C]_1,[B]_2)\)</span> とします。これが、QAPの <span class="arithmatex">\(A,B,C\)</span> にあたるものです。 <span class="arithmatex">\(A,C\)</span> が <span class="arithmatex">\(\mathbb{G}_1\)</span> の元の離散対数表現であり、 <span class="arithmatex">\(B\)</span> が <span class="arithmatex">\(\mathbb{G}_2\)</span> の元の離散対数表現です。</p>
+<div class="arithmatex">\[ \pi \coloneqq ([A]_1,[C]_1,[B]_2) \]</div>
+<p>離散対数表現を使わなければ次の式で表せます。</p>
+<div class="arithmatex">\[ \pi \coloneqq (g^A,g^C,h^B) \]</div>
+<p>ここで、 <span class="arithmatex">\(A,B,C\)</span> は以下の式で定義します。</p>
+<div class="arithmatex">\[ \begin{align}
+A &amp;\coloneqq \alpha + \sum_{i=0}^m a_i u_i(x) + r \delta \\
+B &amp;\coloneqq \beta + \sum_{i=0}^m a_i v_i(x) + s\delta \\
+C &amp;\coloneqq \frac{\displaystyle\sum_{i=\ell+1}^m a_i (\beta u_i(x)+\alpha v_i(x)+w_i(x) )+h(x) t(x)}{\delta}+A s+B r-r s \delta 
+\end{align} \]</div>
+<p><strong>検証アルゴリズム</strong> <span class="arithmatex">\(\mathrm{Verify}\)</span> は、関係 <span class="arithmatex">\(R\)</span> 、共通参照文字列 <span class="arithmatex">\(\sigma\)</span> 、ステートメントワイヤー <span class="arithmatex">\(a_1,\ldots,a_\ell\)</span> 、アーギュメント <span class="arithmatex">\(\pi\)</span> を入力として、却下を表す <span class="arithmatex">\(0\)</span> あるいは受理を表す <span class="arithmatex">\(1\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ 0/1 \leftarrow \operatorname{Verify}(R, \sigma, a_1, \ldots, a_{\ell}, \pi) \]</div>
+<p>具体的なアルゴリズムを説明します。まず、与えられた <span class="arithmatex">\(\pi=([A]_1,[C]_1,[B]_2) \in \mathbb{G}_1^2 \times \mathbb{G}_2\)</span> をパースします。次に、以下の式を満たすかチェックし、満たすなら証明を受理します。</p>
+<div class="arithmatex">\[ [A]_1 \cdot[B]_2=[\alpha]_1 \cdot[\beta]_2+\sum_{i=0}^{\ell} a_i\left[\frac{\beta u_i(x)+\alpha v_i(x)+w_i(x)}{\gamma}\right]_1 \cdot[\gamma]_2+[C]_1 \cdot[\delta]_2 \]</div>
+<p><strong>シミュレーションアルゴリズム</strong> <span class="arithmatex">\(\mathrm{Sim}\)</span> 、あるいは単にシミュレーターは、関係 <span class="arithmatex">\(R\)</span> 、シミュレーショントラップドア <span class="arithmatex">\(\tau\)</span> 、ステートメントワイヤー <span class="arithmatex">\(a_1,\ldots,a_\ell\)</span> を入力とし、アーギュメント <span class="arithmatex">\(\pi\)</span> を出力します。次の式で表せます。</p>
+<div class="arithmatex">\[ \pi \leftarrow \operatorname{Sim}(R, \tau, a_1, \ldots, a_{\ell}) \]</div>
+<p>具体的なアルゴリズムを説明します。まず、<span class="arithmatex">\(\mathbb Z_p\)</span> から <span class="arithmatex">\(A,B\)</span> を選びます。</p>
+<div class="arithmatex">\[ A, B \leftarrow \mathbb Z_p \]</div>
+<p>次に、アーギュメント <span class="arithmatex">\(\pi=([A]_1,[C]_1,[B]_2)\)</span> をシミュレートして計算します。ここで、 <span class="arithmatex">\(C\)</span> は以下の式を満たします。</p>
+<div class="arithmatex">\[ C=\frac{A B-\alpha \beta-\displaystyle\sum_{i=0}^{\ell} a_i(\beta u_i(x)+\alpha v_i(x)+w_i(x))}{\delta} \]</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../qap/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 2.11. Quadratic Arithmetic Program" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                2.11. Quadratic Arithmetic Program
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../circuit/" class="md-footer__link md-footer__link--next" aria-label="Next: 3. ゼロ知識証明回路の基礎" rel="next">
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Next
+                </span>
+                3. ゼロ知識証明回路の基礎
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.indexes", "navigation.footer", "toc.integrate"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.18008817.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

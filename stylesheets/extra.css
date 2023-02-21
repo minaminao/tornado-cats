@@ -1,0 +1,64 @@
+:root {
+    --tornado-green: rgb(125, 255, 189);
+    --tornado-background: rgb(20, 20, 20);
+    --md-primary-fg-color: var(--tornado-green);
+    --md-primary-fg-color--light: var(--tornado-green);
+    --md-primary-fg-color--dark: rgb(95, 255, 159); /* -30 */
+    --md-primary-bg-color: black;
+    --md-accent-fg-color: var(--tornado-green);
+}
+
+[data-md-color-scheme="slate"] {
+    --md-hue: 150; /* from --tornado-green */
+}
+
+body {
+    background-color: var(--tornado-background);
+    color: white;
+}
+
+.md-typeset h1, .md-typeset h2, .md-typeset h3 {
+    color: var(--tornado-green);
+}
+
+.md-search__input::placeholder {
+    color: black;
+}
+
+.md-nav__title {
+    display: none; /* hide "Tornado Cats" */
+}
+
+/* Admonitions */
+
+.md-typeset .admonition,
+.md-typeset details {
+    background-color: var(--tornado-background);
+    color: white;
+}
+
+.md-typeset .admonition.formal {
+    border-color: var(--tornado-green);
+    font-size: 100%;
+}
+
+.md-typeset .admonition.formal > .admonition-title,
+.md-typeset .admonition.formal > summary {
+    background-color: var(--tornado-background);
+}
+
+.md-typeset .admonition.formal > .admonition-title::before,
+.md-typeset .admonition.formal > summary::before {
+    background-color: var(--tornado-green);
+}
+
+.md-typeset .admonition.formal > .admonition-title {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.md-typeset .admonition.formal > p:not(.admonition-title) {
+    margin-top: 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
